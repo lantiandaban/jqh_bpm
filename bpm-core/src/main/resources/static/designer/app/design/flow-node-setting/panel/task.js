@@ -424,7 +424,7 @@ define(function (require, exports, module) {
                 items: [
                     [{
                         xtype: 'checkbox',
-                        text: '处理人就是审批人',
+                        text: '处理人就是申请人',
                         value: one,
                         onStateChange: (selected) => {
                             stateChange(selected, "1");
