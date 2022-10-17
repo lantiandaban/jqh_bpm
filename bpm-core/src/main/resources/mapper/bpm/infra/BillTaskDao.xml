@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.BillTaskDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.BillTaskEntity">
+        <result column="id" property="id"/>
+        <result column="version" property="version"/>
+        <result column="creation_time" property="creationTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="bill_id" property="billId"/>
+        <result column="user_code" property="userCode"/>
+        <result column="process_id" property="processId"/>
+        <result column="node_approver_id" property="nodeApproverId"/>
+        <result column="node_name" property="nodeName"/>
+        <result column="node_status" property="nodeStatus"/>
+        <result column="dateline" property="dateline"/>
+        <result column="opinion" property="opinion"/>
+        <result column="action" property="action"/>
+        <result column="task_id" property="taskId"/>
+        <result column="last_task_id" property="lastTaskId"/>
+        <result column="sort" property="sort"/>
+        <result column="task_node_key" property="taskNodeKey"/>
+        <result column="last_node_key" property="lastNodeKey"/>
+        <result column="source_user_code" property="sourceUserCode"/>
+        <result column="task_type" property="taskType"/>
+        <result column="transfer_id" property="transferId"/>
+    </resultMap>
+    <update id="updateByRefullIn">
+        UPDATE bill_task
+        SET dateline = #{dateline}
+        WHERE bill_id = #{billId}
+          AND user_code = #{userCode}
+          AND is_deleted = 0
+    </update>
+    <select id="selectActiveExcludeSelf" resultType="java.lang.Integer">
+        select count(id)
+        from bill_task
+        where bill_id = #{billId}
+          and task_id = #{taskId}
+          AND is_deleted = 0
+          and id != #{id}
+          AND node_status = #{status}
+    </select>
+    <select id="selectTotalCount" resultType="java.lang.Integer">
+        select count(id)
+        from bill_task
+        where bill_id = #{billId}
+          AND is_deleted = 0
+          and task_id = #{taskId}
+          AND task_type = #{type}
+    </select>
+    <select id="selectHistoryByBillId"
+            resultType="com.srm.bpm.infra.po.BillApprovalHistoryPO">
+        SELECT ba.id,
+               ba.bill_id,
+               ba.node_status   status,
+               ba.node_name,
+               ba.task_node_key,
+               ba.opinion,
+               ba.dateline,
+               ba.sort,
+               ba.creation_time create_time,
+               ba.user_code,
+               ba.action,
+               ba.node_approver_id,
+               ba.task_id,
+               ba.last_task_id,
+               ba.source_user_code,
+               ba.task_type,
+               ba.transfer_id,
+               ba.last_node_key,
+               ba1.user_code    targetUserCode,
+               ba1.task_type    targetTaskType
+        FROM bill_task ba
+                 LEFT JOIN bill_task ba1 ON ba1.source_task_id = ba.id
+        WHERE ba.bill_id = #{billId}
+          AND ba.node_status != 7
+          AND ba.is_deleted = 0
+        ORDER BY ba.sort DESC
+    </select>
+    <select id="selectTaskByBillAndUserCode"
+            resultType="com.srm.bpm.infra.entity.BillTaskEntity">
+        SELECT id,
+               bill_id,
+               user_code,
+               task_id,
+               last_task_id,
+               process_id,
+               node_status,
+               node_name,
+               dateline,
+               sort,
+               task_node_key,
+               ba.source_user_code,
+               ba.task_type,
+               ba.transfer_id,
+               ba.node_approver_id,
+               ba.last_node_key
+        FROM bill_task ba
+        WHERE bill_id = #{billId}
+          AND user_code = #{userCode}
+          AND ba.is_deleted = 0
+        ORDER BY sort DESC
+
+    </select>
+    <select id="selectCreateTaskByBill"
+            resultType="com.srm.bpm.infra.entity.BillTaskEntity">
+        select bt.*
+        from bill_task bt
+                 LEFT JOIN toa_bill tb on bt.bill_id = tb.id
+                 LEFT JOIN process_node_extend pne
+                           ON pne.process_id = tb.process_id and pne.node_id = bt.task_node_key
+        where bt.is_deleted = 0
+          and tb.is_deleted = 0
+          and pne.is_deleted = 0
+          and pne.link_type = #{nodeType}
+          and tb.id = #{billId}
+        ORDER BY bt.sort DESC
+        LIMIT 1
+    </select>
+    <select id="selectHistoryTasks" resultType="com.srm.bpm.logic.dto.BillTaskDTO">
+        select pne.node_name, bt.id, ifnull(pne.select_approval, 0) select_approval
+        from bill_task bt
+                 LEFT JOIN process_node_extend pne ON pne.node_id = bt.task_node_key
+        WHERE pne.is_deleted = 0
+          and bt.is_deleted = 0
+          AND bt.node_status IN (2, 3, 8, 9)
+          and bt.bill_id = #{billId}
+        GROUP BY pne.id
+    </select>
+
+</mapper>

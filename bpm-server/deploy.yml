@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: scis-bpm-server
+  name: scis-bpm-server
+  namespace: scis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scis-bpm-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: scis-bpm-server
+    spec:
+      containers:
+      - name: scis-bpm-server
+        image: 10.0.100.160:30000/scis/scis-bpm-server:master-20200408-1
+        imagePullPolicy: Always
+        env:
+        - name: JAVA_OPTS
+          value: $JAVA_OPTS
+        - name: SKYWALKING_OPTS
+          value: -javaagent:/opt/skywalking-agent.jar
+        - name: SW_AGENT_NAME
+          value: scis-bpm-server
+        - name: SW_AGENT_COLLECTOR_BACKEND_SERVICES
+          value: skywalking-oap.default:11800
+        resources:
+          limits:
+            memory: 4Gi
+          requests:
+            memory: 2Gi
+        volumeMounts:
+          - name: skywalking-agent
+            mountPath: /opt
+          - name: bpm-pv
+            mountPath: /media
+      volumes:
+        - name: skywalking-agent
+          persistentVolumeClaim:
+            claimName: skywalking-agent-pv-pvc
+        - name: bpm-pv
+          persistentVolumeClaim:
+            claimName: bpm-pv-pvc
+      imagePullSecrets:
+        - name: registry-auth-secret

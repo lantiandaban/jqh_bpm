@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.FormThirdItemDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.FormThirdItemEntity">
+        <result column="id" property="id"/>
+        <result column="third_id" property="thirdId"/>
+        <result column="third_key" property="thirdKey"/>
+        <result column="form_filed" property="formFiled"/>
+        <result column="name" property="name"/>
+    </resultMap>
+    <delete id="physicalDeleteByThirdId">
+        delete
+        from form_third_item
+        where third_id = #{thirdId}
+    </delete>
+    <select id="selectItemByProcessId"
+            resultType="com.srm.bpm.infra.entity.FormThirdItemEntity">
+        select fti.*
+        from form_third_item fti
+                 LEFT JOIN form_third ft on fti.third_id = ft.id
+                 LEFT JOIN toa_form tf ON tf.id = ft.form_id
+        where tf.process_id = #{processId}
+          AND fti.is_deleted = 0
+          AND ft.is_deleted = 0
+          AND tf.is_deleted = 0
+    </select>
+
+</mapper>

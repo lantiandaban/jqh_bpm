@@ -1,0 +1,103 @@
+<div class="content-box">
+    <!--切换内容区域-->
+    <section class="g-contanier">
+        <div class="ui-panels">
+            <div class="ui-panel ext-pad" id="approval-data-div">
+                <div class="ui-panel-title ext-nmb ext-brB">待办事项
+                    <div class="u-fr layui-btn-group">
+                        <button class="layui-btn layui-btn-small layui-btn-normal" id="approval-apply-btn"><i class="layui-icon">&#xe642;</i>发起审批</button>
+                        <button class="layui-btn layui-btn-small layui-btn-normal" id="approval-total-btn"><i class="layui-icon">&#xe629;</i>审批助手</button>
+                    </div>
+                </div>
+                <div class="ui-panel-hd m-t-sm m-b-none">
+                    <form class="layui-form layui-form-pane panel-search" action="">
+                        <div class="layui-form-item m-b-none">
+                            <div class="layui-inline  m-r-xxs">
+                                <label class="layui-form-label">开始时间</label>
+                                <div class="layui-input-block">
+                                    <div id="approval-start-time"></div>
+                                </div>
+                            </div>
+                            <div class="layui-inline  m-r-xxs">
+                                <label class="layui-form-label">结束时间</label>
+                                <div class="layui-input-block">
+                                    <div id="approval-end-time"></div>
+                                </div>
+                            </div>
+                            <div class="layui-inline m-r-xxs">
+                                <label class="layui-form-label">审批类型</label>
+                                <div class="layui-input-block">
+                                    <div id="approval-process-types"></div>
+                                </div>
+                            </div>
+                            <div class="layui-inline m-r-xxs">
+                                <label class="layui-form-label">审批状态</label>
+                                <div class="layui-input-block">
+                                    <div id="approval-flow-status"></div>
+                                </div>
+                            </div>
+                            <div class="layui-inline m-r-xxs">
+                                <label class="layui-form-label w75" for="approval-employee-select">申请人</label>
+                                <div class="layui-input-block">
+                                    <select id="approval-employee-select" class="w150">
+                                        <option value="-1">全部</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline m-r-xxs">
+                                <label class="layui-form-label w75" for="approval-customer-select">收款人</label>
+                                <div class="layui-input-block">
+                                    <select id="approval-customer-select" class="w150">
+                                        <option value="-1">全部</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline m-r-xxs">
+                                <button type="button" class="layui-btn layui-btn-small"
+                                        id="approval-search">查询
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <table id="toa_bill_approval_tb" lay-filter="approvalTb"></table>
+            </div>
+
+        </div>
+    </section>
+
+    <div id="approvalTotalRightBody" class="approval-total-right-body">
+        <i class="close"></i>
+        <div class="charts-content"></div>
+        <div class="table-content"></div>
+        <div class="content-empty">
+            <img src="/static/resource/img/nodata.png">
+            <span>暂无数据</span>
+        </div>
+    </div>
+
+</div>
+<script type="text/html" id="laytpl_apprival_time">
+        {{ layui.laytpl.timeFormat(d.startTime) }}
+</script>
+
+<script type="text/html" id="laytool_approval_action">
+    <a href="javascript:void(0)" lay-event="detail" class="layui-btn layui-btn-mini">详情</a>
+</script>
+
+<script type="text/html" id="laytool_approval_title">
+<div class="currsor-pointer" lay-event="detail">
+{{#  if(d.readFlag){ }}
+    <span class="ui-btn-disabled">已读</span>
+{{# } else { }}
+    <span class="ui-btn-warning">未读</span>
+{{#  } }}
+{{d.title}}
+</div>
+</script>
+<script type="text/html" id="laytool_approval_code">
+    <div class="currsor-pointer" lay-event="detail">
+        {{d.code}}
+    </div>
+</script>

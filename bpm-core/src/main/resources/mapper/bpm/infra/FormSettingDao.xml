@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.FormSettingDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.FormSettingEntity">
+        <result column="id" property="id" />
+        <result column="version" property="version" />
+        <result column="creation_time" property="creationTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="form_id" property="formId" />
+        <result column="form_link" property="formLink" />
+        <result column="approve_link" property="approveLink" />
+        <result column="approve_form_height" property="approve_form_height" />
+        <result column="print_template_path" property="printTemplatePath" />
+        <result column="print_template_url" property="printTemplateUrl" />
+        <result column="push_type" property="pushType" />
+    </resultMap>
+    <select id="selectByProcess"
+            resultType="com.srm.bpm.infra.entity.FormSettingEntity">
+        SELECT fs.id, fs.form_id, fs.form_link, fs.print_template_path, fs.print_template_url,
+               fs.push_type, fs.creation_time, fs.update_time,fs.approve_link,fs.approve_form_height
+        FROM
+            form_setting fs
+                JOIN toa_form tf ON fs.form_id = tf.id AND tf.is_deleted = 0
+        WHERE
+            tf.process_id = #{processId} AND fs.is_deleted = 0
+    </select>
+
+</mapper>

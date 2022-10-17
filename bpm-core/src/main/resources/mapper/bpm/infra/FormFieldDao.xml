@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.FormFieldDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.FormFieldEntity">
+        <result column="id" property="id" />
+        <result column="version" property="version" />
+        <result column="creation_time" property="creationTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="form_id" property="formId" />
+        <result column="title" property="title" />
+        <result column="type" property="type" />
+        <result column="biz_type" property="bizType" />
+        <result column="widget_name" property="widgetName" />
+        <result column="value_type" property="valueType" />
+        <result column="props" property="props" />
+        <result column="description" property="description" />
+        <result column="placeholder" property="placeholder" />
+        <result column="required" property="required" />
+        <result column="field_id" property="fieldId" />
+        <result column="datasource_code" property="datasourceCode" />
+        <result column="sort" property="sort" />
+    </resultMap>
+    <select id="selectByProcessIdAndXtype"
+            resultType="com.srm.bpm.infra.entity.FormFieldEntity">
+        SELECT ff.id, ff.form_id, ff.title, ff.type, ff.description, ff.placeholder, ff.required,
+               ff.datasource_code, ff.field_id, ff.sort, ff.value_type, ff.biz_type, ff.props,
+               ff.widget_name, ff.creation_time
+        FROM form_field ff INNER JOIN toa_form tf ON tf.id = ff.form_id
+        WHERE ff.is_deleted = 0
+          AND tf.process_id = #{processId} AND ff.type = #{xtype}
+        ORDER BY ff.field_id, ff.sort
+    </select>
+    <select id="selectByProcessId"
+            resultType="com.srm.bpm.infra.entity.FormFieldEntity">
+        SELECT ff.id, ff.form_id, ff.title, ff.type, ff.description, ff.placeholder, ff.required,
+               ff.field_id, ff.datasource_code, ff.sort, ff.value_type, ff.biz_type, ff.props,
+               ff.widget_name, ff.creation_time
+        FROM form_field ff INNER JOIN toa_form tf ON tf.id = ff.form_id
+        WHERE ff.is_deleted = 0 AND tf.process_id = #{processId}
+        ORDER BY ff.field_id, ff.sort
+    </select>
+
+</mapper>

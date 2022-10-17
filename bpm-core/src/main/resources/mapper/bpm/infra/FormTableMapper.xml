@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.FormTableDao">
+    <update id="addColumn">
+        ALTER TABLE ${tableName}
+        ADD COLUMN ${field.fieldName} ${field.dataType} <if test="field.defaultValue!=null">NOT NULL
+        DEFAULT ${field.defaultValue}
+    </if> COMMENT
+        '${field.comment}'
+    </update>
+    <update id="createMainTable">
+        CREATE TABLE ${table.tableName} (
+        id_ BIGINT(20) NOT NULL COMMENT '物理主键',
+        user_code varchar(32) NOT NULL DEFAULT 0 COMMENT '创建人',
+        create_time int(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
+        <if test="fields != null and fields.size > 0">
+            <foreach collection="fields" item="field" index="index" separator=",">
+                ${field.fieldName} ${field.dataType}
+                <if test="field.defaultValue!=null">NOT NULL DEFAULT ${field.defaultValue}</if>
+                COMMENT
+                '${field.comment}'
+            </foreach>
+        </if>
+        ,PRIMARY KEY (id_)
+        )
+    </update>
+    <update id="createDetailTable">
+        CREATE TABLE ${table.tableName} (
+        id_ BIGINT(20) NOT NULL COMMENT '物理主键',
+        main_id_ BIGINT(20) not null COMMENT '主表物理ID',
+        <if test="fields != null and fields.size > 0">
+            <foreach collection="fields" item="field" index="index" separator=",">
+                ${field.fieldName} ${field.dataType}
+                <if test="field.defaultValue!=null">NOT NULL DEFAULT ${field.defaultValue}</if>
+                COMMENT
+                '${field.comment}'
+            </foreach>
+        </if>
+        , KEY `AK_form` (main_id_),
+        PRIMARY KEY (id_)
+        )
+    </update>
+    <update id="executeUpdateSql">
+        ${_sql}
+    </update>
+
+    <select id="executeSelectSql" resultType="map" parameterType="map">
+        ${sql._sql}
+    </select>
+    <select id="mysqlQueryTables" resultType="java.lang.String">
+        SHOW TABLES
+    </select>
+    <select id="findColumnByTableName" resultType="com.srm.bpm.infra.po.TableFieldPO">
+        SELECT COLUMN_NAME, data_type, column_comment
+        FROM `INFORMATION_SCHEMA`.`COLUMNS`
+        WHERE `TABLE_NAME` = #{tableName}  AND table_schema = database()
+    </select>
+    <select id="selectTableSize" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM information_schema.tables
+        WHERE table_schema = database()
+          AND TABLE_NAME LIKE #{tableName}
+    </select>
+    <select id="isTargetTableExistInDB" resultType="java.lang.String">
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = database()
+          AND TABLE_NAME = #{tableName}
+    </select>
+    <select id="selectColumnNameByTableName" resultType="java.lang.String">
+        SELECT COLUMN_NAME
+        FROM `INFORMATION_SCHEMA`.`COLUMNS`
+        WHERE `TABLE_NAME` = #{tableName}  AND table_schema = database()
+    </select>
+    <select id="executePagingSql" resultType="map" parameterType="map">
+        ${sql._sql}
+    </select>
+
+</mapper>

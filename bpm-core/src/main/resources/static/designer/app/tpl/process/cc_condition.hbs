@@ -1,0 +1,37 @@
+<div class="col-md-12 {{#if add}}{{else}} pt10 {{/if}} cc_condition" data-index="{{index}}"
+     id="cc_condition_{{index}}">
+    <select class="select2-single w100 con_type">
+        <option value="7">无条件</option>
+        <option value="1">表单字段</option>
+        <option value="3">申请人部门</option>
+    </select>
+
+    <select class="select2-single w150 pl10 con_field"  style="display:none;">
+    </select>
+
+
+    <select class="select2-single w100 pl10 con_relatio"  style="display:none;">
+        <option value="include">属于</option>
+        <option value="exclude">不属于</option>
+        <option value="==">等于</option>
+        <option value="!=">不等于</option>
+        <option value=">=">大于等于</option>
+        <option value="<=">小于等于</option>
+        <option value=">">大于</option>
+        <option value="<">小于</option>
+    </select>
+
+    <select class="select2-single w100 pl10 con_relatio2" style="display:none">
+        <option value="include">属于</option>
+        <option value="exclude">不属于</option>
+    </select>
+
+    <input class="form-control w150 lh40 h-40 pl10 ipt-value" placeholder="请输入条件值"
+           style="display:none;" data-index="{{index}}">
+    <input type="hidden" class="ipt-select-value" value="[]">
+    {{#if add}}
+        <button type="button" class="btn btn-default pl10 act_add_condition">添加条件</button>
+    {{else}}
+        <button type="button" class="btn btn-info pl10 act_remove_condition">移除条件</button>
+    {{/if}}
+</div>

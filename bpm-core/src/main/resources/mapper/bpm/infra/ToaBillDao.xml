@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.ToaBillDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.ToaBillEntity">
+        <result column="id" property="id"/>
+        <result column="version" property="version"/>
+        <result column="creation_time" property="creationTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="code" property="code"/>
+        <result column="code_rule" property="codeRule"/>
+        <result column="process_id" property="processId"/>
+        <result column="process_instance_id" property="processInstanceId"/>
+        <result column="form_table_name" property="formTableName"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="sender" property="sender"/>
+        <result column="department_code" property="departmentCode"/>
+        <result column="status" property="status"/>
+        <result column="device" property="device"/>
+        <result column="likes" property="likes"/>
+        <result column="replies" property="replies"/>
+        <result column="approval_item" property="approvalItem"/>
+        <result column="start_time" property="startTime"/>
+        <result column="completion_time" property="completionTime"/>
+        <result column="priority" property="priority"/>
+        <result column="archived_time" property="archivedTime"/>
+        <result column="attachment_flag" property="attachmentFlag"/>
+    </resultMap>
+    <select id="selectApproverByUserCode"
+            resultType="com.srm.bpm.infra.po.BillItemPO">
+        SELECT tb.id, tb.code, tb.title, tb.completion_time, tb.start_time,tb.print_size
+        , tb.priority, tb.status, tb.replies, tb.archived_time, tb.attachment_flag
+        , approver.node_name, approver.dateline, approver.node_status
+        ,approver.action, tb.sender, tp.id AS process_id, tp.name AS process_name,
+        brr.read_time,fs.form_link,fs.approve_link,tp.assistant,
+        pne.btns
+        FROM toa_bill tb
+        INNER JOIN toa_process tp ON tp.id = tb.process_id and tp.is_deleted = 0
+        INNER JOIN bill_data_json bdj ON bdj.bill_id = tb.id and bdj.is_deleted = 0
+        LEFT JOIN bill_read_record brr ON brr.user_code = #{userCode} AND brr.bill_id = tb.id
+        and brr.is_deleted = 0
+        INNER JOIN (SELECT ba.id, ba.dateline, ba.node_status, ba.bill_id, ba.node_name,
+        ba.user_code,ba.action,ba.task_node_key
+        FROM (SELECT
+        btt.bill_id,
+        MAX( btt.sort ) AS ct
+        FROM
+        bill_task btt LEFT JOIN process_node_extend pne ON pne.node_id = btt.task_node_key
+        WHERE
+        btt.user_code = #{userCode}
+        AND btt.node_status IN ( 2, 3, 5,10 )
+        AND btt.is_deleted = 0 AND pne.link_type!='create'
+        GROUP BY
+        btt.bill_id ) bt INNER JOIN bill_task ba ON bt.ct = ba.sort AND ba.bill_id=bt.bill_id AND ba.user_code = #{userCode}
+        GROUP BY ba.bill_id) approver ON
+        approver.bill_id = tb.id
+        LEFT JOIN toa_form tf ON tf.process_id=tp.id AND tf.is_deleted=0
+        LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
+        LEFT JOIN process_node_extend pne ON pne.node_id = approver.task_node_key AND pne.is_deleted=0
+        WHERE tb.is_deleted = 0 AND tb.status != 0
+        <if test="query != null">
+            <if test="query.rangeTime != null and  query.rangeTime != ''">
+                AND tb.start_time BETWEEN #{query.unixStartTime} and #{query.unixEndTime}
+            </if>
+            <if test="query.processId > 0 ">
+                AND tb.process_id = #{query.processId}
+            </if>
+            <if test="query.sender > 0 ">
+                AND tb.sender = #{query.sender}
+            </if>
+            <if test="query.code != null and query.code != ''">
+                AND tb.code LIKE #{query.codeLike}
+            </if>
+            <if test="query.status !=null and query.status >= 0">
+                AND tb.status = #{query.status}
+            </if>
+        </if>
+        ORDER BY approver.dateline desc, tb.start_time DESC
+    </select>
+    <select id="selectTodoByStatus" resultType="com.srm.bpm.infra.po.BillItemPO">
+        SELECT tb.id, tb.code, tb.title, tb.completion_time, tb.start_time, tb.priority, tb.status,
+        tb.replies, tb.archived_time,tb.attachment_flag,
+        approver.node_name, approver.task_id, tb.sender,approver.action,tb.print_size,
+        tp.id AS process_id, tp.name AS process_name, brr.read_time,fs.form_link,fs.approve_link,tp.assistant
+        FROM toa_bill tb
+        INNER JOIN toa_process tp ON tp.id = tb.process_id
+        INNER JOIN bill_data_json bdj ON bdj.bill_id = tb.id and bdj.is_deleted = 0
+        INNER JOIN (SELECT ba.node_name, ba.task_id, ba.user_code, ba.bill_id,ba.action FROM
+        bill_task ba
+        WHERE node_status = 1 AND ba.user_code = #{approver}
+        ORDER BY sort DESC ) approver ON approver.bill_id = tb.id
+        LEFT JOIN bill_read_record brr ON brr.user_code = #{approver} AND brr.bill_id = tb.id and
+        brr.is_deleted = 0
+        LEFT JOIN toa_form tf ON tf.process_id=tp.id AND tf.is_deleted=0
+        LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
+        WHERE tb.is_deleted = 0 AND tb.status in
+        <foreach collection="statusList" item="status" separator="," open="(" close=")">
+            #{status}
+        </foreach>
+        <if test="query != null">
+            <if test="query.rangeTime != null and query.rangeTime != ''">
+                AND tb.start_time BETWEEN #{query.unixStartTime} AND #{query.unixEndTime}
+            </if>
+            <if test="query.processId > 0 ">
+                AND tb.process_id = #{query.processId}
+            </if>
+            <if test="query.sender > 0 ">
+                AND tb.sender = #{query.sender}
+            </if>
+            <if test="query.code != null and query.code != ''">
+                AND tb.code like #{query.codeLike}
+            </if>
+            <if test="query.title != null and query.title != ''">
+                AND tb.title like #{query.titleLike}
+            </if>
+            <if test="query.status !=null and query.status > 0">
+                AND tb.status = #{query.status}
+            </if>
+
+        </if>
+        ORDER BY brr.read_time, tb.start_time DESC
+    </select>
+    <select id="selectCreateByEmployee" resultType="com.srm.bpm.infra.po.BillItemPO">
+        SELECT tb.id, tb.code, tb.title, tb.completion_time, tb.start_time, tb.priority, tb.status,
+        tb.replies, tb.archived_time,tb.attachment_flag,tb.sender,tb.print_size,
+        approver.node_name, approver.task_id,approver.action,
+        tp.id AS process_id,tp.name AS process_name,fs.form_link,fs.approve_link,tp.assistant
+        FROM toa_bill tb INNER JOIN toa_process tp ON tp.id = tb.process_id
+        INNER JOIN bill_data_json bdj ON bdj.bill_id = tb.id and bdj.is_deleted = 0
+        LEFT JOIN (SELECT ba.id, ba.bill_id, ba.node_name, ba.task_id, ba.user_code,ba.action
+        FROM (SELECT bill_id, max(sort) AS ct FROM bill_task GROUP BY bill_id) AS bt
+        INNER JOIN bill_task ba ON bt.ct = ba.sort AND bt.bill_id = ba.bill_id GROUP BY ba.bill_id)
+        approver
+        ON approver.bill_id = tb.id
+        LEFT JOIN toa_form tf ON tf.process_id=tp.id AND tf.is_deleted=0
+        LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
+        WHERE tb.is_deleted = 0 and tb.sender = #{userCode} and tb.status > 0
+        <if test="query != null">
+            <if test="query.rangeTime != null and query.rangeTime != ''">
+                AND tb.start_time BETWEEN #{query.unixStartTime} AND #{query.unixEndTime}
+            </if>
+            <if test="query.processId > 0 ">
+                AND tb.process_id = #{query.processId}
+            </if>
+            <if test="query.code != null and query.code != ''">
+                AND tb.code LIKE #{query.codeLike}
+            </if>
+            <if test="query.status !=null and query.status >= 0">
+                AND tb.status = #{query.status}
+            </if>
+            <if test="query.approval > 0">
+                AND approver.user_code = #{query.approval}
+            </if>
+        </if>
+        ORDER BY tb.start_time DESC
+    </select>
+    <select id="selectDraftsBySender" resultType="com.srm.bpm.infra.po.BillItemPO">
+        SELECT tb.id, tb.code, tb.title, tb.start_time create_time, tb.start_time, tb.priority,tb.print_size,
+        tb.status,
+        tb.replies, tb.archived_time,tb.attachment_flag,
+        tp.id AS process_id, tp.name AS process_name,tb.sender,fs.form_link,fs.approve_link,tp.assistant
+        FROM toa_bill tb INNER JOIN toa_process tp ON tp.id = tb.process_id
+        LEFT JOIN toa_form tf ON tf.process_id=tp.id AND tf.is_deleted=0
+        LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
+        WHERE tb.is_deleted = 0 AND tb.status = 0 AND tb.sender = #{sender}
+        <if test="query != null">
+            <if test="query.rangeTime != null and query.rangeTime != ''">
+                AND tb.start_time BETWEEN #{query.unixStartTime} AND #{query.unixEndTime}
+            </if>
+            <if test="query.code != null and query.code != ''">
+                AND tb.code LIKE #{query.codeLike}
+            </if>
+            <if test="query.processId > 0 ">
+                AND tb.process_id = #{query.processId}
+            </if>
+        </if>
+        ORDER BY tb.creation_time DESC
+    </select>
+    <select id="selectCc" resultType="com.srm.bpm.infra.po.BillItemPO">
+        SELECT tb.id, tb.code, tb.title, tb.completion_time, tb.start_time, tb.attachment_flag,tb.print_size,
+        tb.priority, tb.status, tb.replies, tb.archived_time, tb.sender, bcp.dateline, tp.id AS
+        process_id, tp.name AS process_name, brr.read_time,fs.form_link,fs.approve_link,tp.assistant
+        FROM toa_bill tb INNER JOIN toa_process tp ON tp.id = tb.process_id
+        INNER JOIN bill_cc_person bcp ON bcp.bill_id = tb.id AND bcp.user_code = #{userCode}
+        LEFT JOIN bill_read_record brr ON brr.bill_id = tb.id AND brr.user_code = #{userCode} and
+        brr.is_deleted = 0
+        LEFT JOIN toa_form tf ON tf.process_id=tp.id AND tf.is_deleted=0
+        LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
+        WHERE tb.is_deleted = 0 AND tb.status != 0
+        <if test="query != null">
+            <if test="query.rangeTime != null and  query.rangeTime != ''">
+                AND bcp.dateline BETWEEN #{query.unixStartTime} AND #{query.unixEndTime}
+            </if>
+            <if test="query.processId > 0 ">
+                AND tb.process_id = #{query.processId}
+            </if>
+            <if test="query.sender > 0">
+                AND tb.sender = #{query.sender}
+            </if>
+            <if test="query.code != null and query.code != ''">
+                AND tb.code like #{query.codeLike}
+            </if>
+            <if test="query.status !=null and query.status >= 0">
+                AND tb.status = #{query.status}
+            </if>
+        </if>
+        ORDER BY bcp.dateline desc
+    </select>
+    <select id="selectTodoSizeByStatus" resultType="java.lang.String">
+        SELECT count(tb.id)
+        FROM toa_bill tb INNER JOIN toa_process tp ON tp.id = tb.process_id
+        INNER JOIN bill_data_json bdj ON bdj.bill_id = tb.id and bdj.is_deleted = 0
+        INNER JOIN (SELECT ba.node_name, ba.task_id, ba.user_code, ba.bill_id,ba.action FROM
+        bill_task ba
+        WHERE node_status = 1 AND ba.user_code = #{approver}
+        ORDER BY sort DESC ) approver ON approver.bill_id = tb.id
+        LEFT JOIN bill_read_record brr ON brr.user_code = #{approver} AND brr.bill_id = tb.id and
+        brr.is_deleted = 0
+        LEFT JOIN toa_form tf ON tf.process_id=tp.id AND tf.is_deleted=0
+        LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
+        WHERE tb.is_deleted = 0 AND tb.status in
+        <foreach collection="statusList" item="status" separator="," open="(" close=")">
+            #{status}
+        </foreach>
+        ORDER BY brr.read_time, tb.start_time DESC
+    </select>
+    <select id="selectAllByQuery" resultType="com.srm.bpm.infra.po.BillItemPO">
+        SELECT tb.id, tb.code, tb.title, tb.completion_time, tb.start_time, tb.attachment_flag,
+        tb.priority, tb.status, tb.replies, tb.archived_time, tb.sender, tb.start_time dateline, tp.id AS
+        process_id, tp.name AS process_name, fs.form_link,fs.approve_link,tp.assistant
+        FROM toa_bill tb INNER JOIN toa_process tp ON tp.id = tb.process_id
+        LEFT JOIN toa_form tf ON tf.process_id=tp.id AND tf.is_deleted=0
+        LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
+        WHERE tb.is_deleted = 0 AND tb.status != 0
+        <if test="query != null">
+            <if test="query.rangeTime != null and  query.rangeTime != ''">
+                AND tb.start_time BETWEEN #{query.unixStartTime} AND #{query.unixEndTime}
+            </if>
+            <if test="query.processId > 0 ">
+                AND tb.process_id = #{query.processId}
+            </if>
+            <if test="query.status !=null and query.status >= 0">
+                AND tb.status = #{query.status}
+            </if>
+            <if test="query.code != null and query.code != ''">
+                AND tb.code like #{query.codeLike}
+            </if>
+            <if test="query.title != null and query.title != ''">
+                AND tb.title like #{query.titleLike}
+            </if>
+        </if>
+        ORDER BY tb.start_time desc
+    </select>
+    <select id="selectTodoCateSiez" resultType="com.srm.bpm.infra.po.ProcessGridPO">
+        SELECT tp.id,
+        tp.code,
+        tp.name,
+        tp.display_name,
+        tp.type_id,
+        count(tb.id) size
+        FROM toa_bill tb
+        INNER JOIN toa_process tp ON tp.id = tb.process_id
+        INNER JOIN bill_data_json bdj ON bdj.bill_id = tb.id and bdj.is_deleted = 0
+        INNER JOIN (SELECT ba.node_name, ba.task_id, ba.user_code, ba.bill_id,ba.action FROM
+        bill_task ba
+        WHERE node_status = 1 AND ba.user_code = #{approver} AND ba.is_deleted=0
+        ORDER BY sort DESC ) approver ON approver.bill_id = tb.id
+        WHERE tb.is_deleted = 0 AND tb.status in
+        <foreach collection="statusList" item="status" separator="," open="(" close=")">
+            #{status}
+        </foreach>
+        GROUP BY tp.id
+    </select>
+
+</mapper>

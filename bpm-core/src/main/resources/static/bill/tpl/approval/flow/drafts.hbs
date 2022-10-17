@@ -1,0 +1,66 @@
+<div class="content-box">
+    <!--切换内容区域-->
+    <section class="g-contanier">
+        <div class="ui-panels">
+            <div class="ui-panel ext-pad" id="drafts-data-div">
+                <div class="ui-panel-title ext-nmb ext-brB">草稿箱
+                    <div class="u-fr u-button-group">
+                        <button class="layui-btn layui-btn-normal layui-btn-small"
+                                id="drafts-apply-btn"><i class="layui-icon">&#xe642;</i>发起审批
+                        </button>
+                    </div>
+                </div>
+                <div class="ui-panel-hd m-t-sm m-b-none">
+                    <form class="layui-form layui-form-pane panel-search" action="">
+                        <div class="layui-form-item m-b-none">
+                            <div class="layui-inline m-r-xxs">
+                                <label class="layui-form-label">开始时间</label>
+                                <div class="layui-input-block">
+                                    <div id="drafts-start-time"></div>
+                                </div>
+                            </div>
+                            <div class="layui-inline m-r-xxs">
+                                <label class="layui-form-label">结束时间</label>
+                                <div class="layui-input-block">
+                                    <div id="drafts-end-time"></div>
+                                </div>
+                            </div>
+                            <div class="layui-inline m-r-xxs">
+                                <label class="layui-form-label">审批类型</label>
+                                <div class="layui-input-block">
+                                    <div id="drafts-process-types"></div>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline m-r-xxs">
+                                <button type="button" class="layui-btn layui-btn-small" id="drafts-search">查询</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <table id="toa_bill_drafts_tb" lay-filter="draftsTb"></table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script type="text/html" id="laytpl_drafts_time">
+    {{ layui.laytpl.timeFormat(d.createTime) }}
+</script>
+
+<script type="text/html" id="laytool_drafts_action">
+    <a href="javascript:void(0)"  lay-event="detail" class="layui-btn layui-btn-mini">详情</a>
+    <a href="javascript:void(0)"  lay-event="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
+</script>
+
+<script type="text/html" id="laytool_drafts_title">
+    <div class="currsor-pointer" lay-event="detail">
+        {{d.title}}
+    </div>
+</script>
+
+<script type="text/html" id="laytool_drafts_code">
+    <div class="currsor-pointer" lay-event="detail">
+        {{d.code}}
+    </div>
+</script>

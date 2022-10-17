@@ -1,0 +1,35 @@
+<tr id="condition_{{order}}">
+    <td class="text-center">
+        <label class="option block mn">
+            <input type="checkbox" id="chk_condition_{{order}}">
+            <span class="checkbox mn"></span>
+        </label>
+    </td>
+    <td>{{order}}</td>
+    <td>
+        <input type="text" id="conditionName_{{order}}" autocomplete="off"
+               placeholder="请输入条件名称" class="gui-input h-25 " value="{{conditionName}}">
+    </td>
+    <td>
+        <input type="text" id="conditionCode_{{order}}" autocomplete="off"
+               placeholder="请输入条件KEY(字段名)" class="gui-input h-25" value="{{conditionCode}}">
+    </td>
+    <td class="text-center">
+        <label class="option block mn">
+            <input type="checkbox" disabled=""  id="inputFlag_{{order}}" {{#if inputFlag}}checked{{/if}}>
+            <span class="checkbox mn"></span>
+        </label>
+    </td>
+    <td>
+        <input type="text" id="inputValue_{{order}}" autocomplete="off"
+               placeholder="请输入条件值" class="gui-input h-25" value="{{inputValue}}">
+    </td>
+    <td>
+        <input type="number" id="conditionSort_{{order}}" autocomplete="off"
+               placeholder="请输入排序值" {{#if conditionSort}}value="{{conditionSort}}"
+               {{else}}value="1"{{/if}} class="gui-input h-25">
+    </td>
+    <td>
+        <a href="javascript:void(0);" name="item_remove" class="btn btn-sm btn-danger">移除</a>
+    </td>
+</tr>

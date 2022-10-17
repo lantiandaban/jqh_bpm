@@ -1,0 +1,57 @@
+scis:
+  tenant:
+    enable: false
+server:
+  port: 9094
+spring:
+  application:
+    name: bpm-server
+  main:
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
+  #环境 dev|test|prod
+  profiles:
+    active: dev
+  messages:
+    encoding: UTF-8
+    basename: i18n/messages_common
+  mvc:
+    static-path-pattern: /static/**
+    view:
+      prefix: /view/
+      suffix: .ftl
+  freemarker:
+    suffix: .ftl
+    template-loader-path: classpath:/view/, classpath:/templates/*
+    cache: false
+  activiti:
+    async-executor-activate: true
+    check-process-definitions: false
+    jpaEnabled: false
+  boot:
+    admin:
+      client:
+        url: "http://127.0.0.1:9094"
+management:
+  endpoint:
+    jolokia:
+      enabled: false
+    logfile:
+      external-file: "/Users/jiez/workspace/t-oa-bpm/bpm/logs/public.log"
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+logging:
+  config: classpath:logback-spring.xml
+feign:
+  sentinel:
+    enabled: true
+ribbon:
+  ReadTimeout: 300000
+  ConnectTimeout: 300000
+logbook:
+  execution: execution(* com.srm.bpm.facade.*.*Controller.*(..))

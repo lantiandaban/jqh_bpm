@@ -1,0 +1,50 @@
+{{#each this}}
+    <tr id="line_table_{{id}}">
+        <td>{{inc @index}}</td>
+        <td style="word-break:break-all; word-wrap:break-word;">
+            {{#each condition}}
+                {{#if @index}}并且{{/if}}
+                {{#ifCond type '==' '1'}}
+                    {{field.name}}{{relation relation}}{{value}}
+                {{/ifCond}}
+                {{#ifCond type '==' '3'}}
+                    申请人部门{{relation relation}}({{#each organizations}}{{#if @index}},
+                {{/if}}{{name}}{{/each}})
+                {{/ifCond}}
+                {{#ifCond type '==' '7'}}
+                   无条件
+                {{/ifCond}}
+            {{/each}}
+        </td>
+        <td>
+            {{#each subject}}
+                {{#if @index}} {{/if}}
+                {{#ifCond type "==" "1"}}
+                    指定人员 属于 ({{#each users}}{{#if @index}},{{/if}}{{name}}{{/each}})
+                {{/ifCond}}
+                {{#ifCond type "==" "2"}}
+                    申请人直属上级
+                {{/ifCond}}
+                {{#ifCond type "==" "3"}}
+                    审批人直属上级
+                {{/ifCond}}
+            {{/each}}
+        </td>
+        <td>
+            <a data-type="text" class="weight" href="#" data-id="{{id}}">{{weight}}</a>
+        </td>
+        <td>
+            <button type="button" class="btn btn-system btn-sm act-remove" data-id="{{id}}">
+                <i class="fa fa-times"></i>
+            </button>
+        </td>
+    </tr>
+{{else}}
+    <tr>
+        <td colspan="5">
+            <div class="alert alert-default alert-dismissable m30">
+                <p>暂无抄送设置，请点击新增按钮添加抄送设置</p>
+            </div>
+        </td>
+    </tr>
+{{/each}}

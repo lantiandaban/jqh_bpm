@@ -1,0 +1,140 @@
+<div class="content-box">
+    <!--切换内容区域-->
+    <section class="g-contanier">
+        <!--
+        作者：dandan.wang
+        时间：2017-07-06
+        描述：主页主体panel部分
+    -->
+        <div class="ui-panels">
+            <div class="ui-panel ext-pad">
+                <h3 class="ui-panel-title ext-nmb ext-brB">我审批的</h3>
+                <div class="ui-panel-hd">
+                    <div class="approve-search ext-brB-dot u-clearfix">
+                        <form>
+                            <div class="ext-w-33per u-fl">
+                                <span class=" ext-mr10">开始时间</span>
+                                <input type="text" class="ui-input-muted" name="startTime"/>
+                            </div>
+                            <div class="ext-w-33per u-fl">
+                                <span class=" ext-mr10">结束时间</span>
+                                <input type="text" class="ui-input-muted" name="endTime"/>
+                            </div>
+                            <div class="ext-w-33per u-fl u-txt-right">
+                                <span class=" ext-mr10">报销类型</span>
+                                <select class="ui-input-muted" name="reimbursementType">
+                                    <option>请选择</option>
+                                </select>
+                            </div>
+                            <div class="ext-w-33per u-fl ">
+                                <span class=" ext-mr10">审批状态</span>
+                                <select class="ui-input-muted" name="reimbursementType">
+                                    <option>请选择</option>
+                                </select>
+                            </div>
+                            <div class="ext-w-33per u-fl">
+                                <span class=" ext-mr10 ext-ml14">审批人</span>
+                                <select class="ui-input-muted" name="reimbursementType">
+                                    <option>请选择</option>
+                                </select>
+                            </div>
+                            <div class="ext-w-33per u-fl u-txt-right">
+                                <button class="ui-btn-primaryLong ext-ml30 ">查询</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="approve-table">
+                        <div class="approve-table-operation u-txt-right">
+                            <button class="ui-btn-func">
+                                <img src="/static/resource/img/approve-btn-ico1.png" class="ui-btn-funcIcon"/>
+                                审批
+                            </button>
+                            <button class="ui-btn-func">
+                                <img src="/static/resource/img/approve-btn-ico2.png"
+                                     class="ui-btn-funcIcon"/>
+                                批量审批
+                            </button>
+                            <button class="ui-btn-func">
+                                <img src="/static/resource/img/approve-btn-ico3.png" class="ui-btn-funcIcon"/>
+                                打印
+                            </button>
+                            <button class="ui-btn-func">
+                                <img src="/static/resource/img/approve-btn-ico4.png" class="ui-btn-funcIcon"/>
+                                模板下载
+                            </button>
+                            <button class="ui-btn-func">
+                                <img src="/static/resource/img/approve-btn-ico5.png" class="ui-btn-funcIcon"/>
+                                导入
+                            </button>
+                            <button class="ui-btn-func">
+                                <img src="/static/resource/img/approve-btn-ico6.png" class="ui-btn-funcIcon"/>
+                                导出
+                            </button>
+                        </div>
+                        <div class="ui-table">
+                            <table class="ui-table-main" cellspacing="0" cellpadding="0">
+                                <thead>
+                                <tr class="approveTable-tr ui-table-mainHd">
+                                    <th class="ui-table-paneal-choose-btn">
+                                        <input type="checkbox" class="ui-table-input-checked" name="choose" value="">
+                                    </th>
+                                    <th>序号</th>
+                                    <th>审批人</th>
+                                    <th>审批类型</th>
+                                    <th>优先级</th>
+                                    <th>日期</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="ui-table-paneal-choose-btn">
+
+                                        <input type="checkbox" class="ui-table-input-checked" name="choose" value="">
+
+                                    </td>
+                                    <td>ER NO-JT-ER-非项目-2014706010025
+                                        <button class="ui-btn-warning">未读</button>
+                                    </td>
+                                    <td>安国潮</td>
+                                    <td>机票申请</td>
+                                    <td>高</td>
+                                    <td>2017-08-05 12:34</td>
+                                    <td>待审核</td>
+                                    <td class="u-t-primary">
+                                        <a href="javascript:;" class="u-t-primary">同意 </a>|
+                                        <a href="javascript:;" class="u-t-primary">拒绝 </a>|
+                                        <a href="javascript:;" class="u-t-primary">详情 </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ui-table-paneal-choose-btn">
+
+                                        <input type="checkbox" class="ui-table-input-checked" name="choose" value="">
+
+                                    </td>
+                                    <td>ER NO-JT-ER-非项目-2014706010025
+                                        <button class="ui-btn-disabled">已读</button>
+                                    </td>
+                                    <td>安国潮</td>
+                                    <td>机票申请</td>
+                                    <td>高</td>
+                                    <td>2017-08-05 12:34</td>
+                                    <td>待审核</td>
+                                    <td class="u-t-primary">
+                                        <a href="javascript:;" class="u-t-primary">同意 </a>|
+                                        <a href="javascript:;" class="u-t-primary">拒绝 </a>|
+                                        <a href="javascript:;" class="u-t-primary">详情 </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="mine-approval-pagination" style="padding-top: 10px;text-align: center;"></div>
+            </div>
+        </div>
+    </section>
+</div>

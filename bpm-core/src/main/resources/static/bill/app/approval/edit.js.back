@@ -1,0 +1,420 @@
+define(function (require, exports, module) {
+
+    var Hamster = require('lib/index');
+    var BasePage = require('app/layout/page');
+    var pageTabManager = require('app/layout/page-tab-manager');
+    var pageHtml = require('text!view/approval/edit.hbs');
+
+    var ApprovalForm = require('./form/index');
+    var ApprovalFormToolbar = require('./form/toolbar/index');
+
+    var ApprovalEditPage = Class.create({
+
+        extend: BasePage,
+
+        _getContentElement: function () {
+            return $(pageHtml)
+        },
+
+        _beforeInit: function () {
+            ApprovalEditPage.superclass._beforeInit.apply(this);
+
+            this.formMode = g.mode;
+            this.processId = g.processId;
+        },
+
+        _init: function () {
+            ApprovalEditPage.superclass._init.apply(this);
+
+            this.el.form_title = this.el.target.find('h3.approval-form-title');
+            this.el.approval_action_toolbar = this.el.target.find('.approval-form-action-toolbar');
+            this.el.approval_form_wrapper = this.el.target.find('.approval-form-wrapper');
+            this.el.approval_form_opinion = this.el.target.find('.approval-form-opinion');
+            this.el.approval_form_opinion_tbody = this.el.approval_form_opinion.find('tbody');
+
+            this.loader = new Hamster.ui.Loader({
+                container: this.el.target
+            });
+
+            this.initActionToolbar();
+            this.loadData();
+        },
+
+        initActionToolbar: function () {
+            this.toolbar = new ApprovalFormToolbar({
+                targetEl: this.el.approval_action_toolbar,
+                actions: []
+            });
+            this.toolbar.relevance = this;
+        },
+
+        initApprovalForm: function () {
+            var formData = this._formData;
+            // if (this.formMode == 'create') {
+            //     formData = Hamster.apply(formData, this.getLocalDraft());
+            // }
+
+            this.approvalForm = new ApprovalForm({
+                targetEl: this.el.approval_form_wrapper,
+                rows: this._form_setting.columnItems,
+                layout: this._form_setting.attr.layout,
+                permissions: this._permissions,
+                data: formData,
+                mode: this.formMode,
+                billId: this.billId,
+                processId: this.processId,
+                taskId: this.taskId
+            });
+            this.toolbar.approvalForm = this.approvalForm;
+            //this.approvalForm.on('widget-value-change', this.onFormItemWidgetValueChange, this);
+        },
+
+        initApprovalOpinionScope: function () {
+            if (Hamster.isEmpty(this._opinions)) {
+                return
+            }
+
+            this.el.approval_form_opinion.show();
+            Hamster.Array.forEach(this._opinions, function (record) {
+                var statusTag = '';
+                switch (record.status) {
+                    case 2:
+                        statusTag = '<span class="ui-btn-success" style="background: #108ee9 !important; color: #ffffff !important;">同意</span>';
+                        break;
+                    case 3:
+                        statusTag = '<span class="ui-btn-warning">不同意</span>';
+                        break;
+                    default:
+                }
+
+                var rowHtml = Hamster.String.format('<tr><td class="ui-table-col-title ui-table-col-right">{0}</td><td>{1} {2}</td></tr>',
+                    record.title,
+                    statusTag,
+                    record.content);
+
+                $(rowHtml).appendTo(this.el.approval_form_opinion_tbody);
+            }, this);
+        },
+
+        _initEvents: function () {
+            this.toolbar.on('validate-form', this.validateForm, this);
+            this.toolbar.on('import-detail-data', this.importDetailData, this);
+            this.toolbar.on('reimbursing-import-detail-data', this.importDetailData, this);
+
+            this.toolbar.on('approval-submit', this.approvalSubmit, this);
+            this.toolbar.on('approval-save', this.approvalSave, this);
+            this.toolbar.on('approval-agreed', this.approvalAgreed, this);
+            this.toolbar.on('approval-refused', this.approvalRefused, this);
+            this.toolbar.on('approval-undo', this.approvalUndo, this);
+            // 审批归档和确认
+            this.toolbar.on('approval-archived', this.approvalArchived, this);
+            this.toolbar.on('approval-present', this.approvalPresent, this);
+        },
+
+        /**
+         * 获取form的请求数据地址
+         * */
+        getFormHttpAjaxUrl: function () {
+            var sourcePage = this.getPassParam('list');
+            var pageParam = '';
+            if (!Hamster.isEmpty(sourcePage)) {
+                pageParam = '?page=' + sourcePage;
+            }
+            if (this.formMode === 'create') {
+                return 'api/bill/detail/create/' + g.processId;
+            } else if (this.formMode === 'edit') {
+                return 'api/bill/detail/edit/' + this.getPassParam('billId') + pageParam;
+            } else if (this.formMode === 'view') {
+                return 'api/bill/detail/view/' + this.getPassParam('billId') + pageParam;
+            }
+        },
+
+        loadData: function () {
+            this.loader.start();
+            var self = this;
+            var dataHttpAjax = new HttpAjax({
+                url: this.getFormHttpAjaxUrl(),
+                type: 'GET',
+                data: {}
+            });
+            dataHttpAjax.successHandler(this.onApprovalDataSuccess.bind(this));
+            dataHttpAjax.satusCodeHandler(500, function () {
+                Hamster.ui.Message.error('加载审批单失败!');
+                self.loader.stop();
+            });
+            dataHttpAjax.send();
+        },
+
+        onApprovalDataSuccess: function (result) {
+            this._form_setting = JSON.parse(result.form);
+            this._formData = result.formData || {};
+            this._opinions = result.opinions || [];
+            this._permissions = result.permission || [];
+            this._action_btns = result.btns || [];
+
+            console.log(this._form_setting);
+
+            this.el.form_title.text(result.title + "_详情");
+            this.billId = result.billId;
+            this.processId = result.processId;
+            this.taskId = result.taskId;
+
+            this.toolbar.setActions(this._action_btns);
+            this.initApprovalForm();
+            this.initApprovalOpinionScope();
+            this.loader.stop();
+        },
+
+        /**
+         * 如果是费用报销，判断是否有cookie值，如果没有，给个弹窗
+         * @private 私有
+         */
+        _cookieCheck: function () {
+            var cookieVal = $.cookie("891298985011425282");
+            if (cookieVal == null || cookieVal == undefined) {
+                layer.open({
+                    title: "温馨提示",
+                    type: 1,
+                    area: '300px',
+                    content: '<div style="padding: 10px;">\n' +
+                        '<div> 1、自2019年5月1日申请项目费用报销时必须上传双方项目经理签字确认的CAF扫描件或照片作为附件；<br/>' +
+                        ' 2、实名制费用为注明旅客身份信息的机票费、火车票费、公路水路客票费</div>' +
+                        '<div style="text-align: center;margin-top: 20px;">' +
+                        '<input style="display: inline-block;vertical-align: middle;margin-bottom: 2px;" type="checkbox" id="ok_check" value="1" name="ok"/>' +
+                        '<label for="ok_check">我已知晓</label>' +
+                        '</div>' +
+                        '<div style="text-align: center;">' +
+                        '<div id="ok_agree" style=" height: 27px;line-height: 27px;" class="layui-btn layui-btn-primary layui-btn-sm">确定</div>' +
+                        '</div>' +
+                        '</div>',
+                    success: function (layero, index) {
+                        $("#ok_agree").bind('click', function () {
+                            if ($("#ok_check").prop("checked")) {
+                                $.cookie("891298985011425282", '费用报销');
+                                layer.closeAll();
+                            } else {
+                                layer.closeAll();
+                            }
+                        });
+                    }
+                    // yes: function () {
+                    //     $.cookie("891298985011425282", '费用报销');
+                    //     layer.closeAll();
+                    // }
+                });
+            }
+
+        },
+
+        // /**
+        //  * 当表单字段组件值发生改变后
+        //  * */
+        // onFormItemWidgetValueChange: function (widget) {
+        //     this.checkIfSyncLocalDraft();
+        // },
+        //
+        // /**
+        //  * 检查是否需要保存到本地草稿箱
+        //  * */
+        // checkIfSyncLocalDraft: function () {
+        //     if (this.formMode != 'create') {
+        //         return
+        //     }
+        //     var editTime = +new Date();
+        //     this.lastSyncTime = this.lastSyncTime || editTime;
+        //
+        //     if (editTime - this.lastSyncTime >= 3 * 60 * 1000) {
+        //         this.lastSyncTime = editTime;
+        //         this.syncLocalDraft()
+        //     }
+        // },
+        //
+        // /**
+        //  * 保存到本地草稿箱
+        //  * */
+        // syncLocalDraft: function () {
+        //     var formData = this.getFormData();
+        //     var syncName = Hamster.String.format('approval-form-draft-{0}', this.processId);
+        //     localStorage.setItem(syncName, JSON.stringify(formData));
+        //     Hamster.ui.Message.notice('已为您保存到本地缓存中');
+        // },
+        //
+        // /**
+        //  * 获取本地草稿数据
+        //  * */
+        // getLocalDraft: function () {
+        //     var syncName = Hamster.String.format('approval-form-draft-{0}', this.processId);
+        //     var syncData = localStorage.getItem(syncName);
+        //     if (Hamster.isEmpty(syncData)) {
+        //         return {}
+        //     }
+        //     return JSON.parse(syncData) || {}
+        // },
+        //
+        // /**
+        //  * 清除本地草稿数据
+        //  * */
+        // removeLocalDraft: function () {
+        //     var syncName = Hamster.String.format('approval-form-draft-{0}', this.processId);
+        //     localStorage.removeItem(syncName)
+        // },
+
+        /**
+         * 导入明细
+         * */
+        importDetailData: function (data) {
+            this.approvalForm.importDetailData(data)
+        },
+
+        /**
+         * 提交操作成功
+         * */
+        approvalSubmit: function () {
+            // this.removeLocalDraft();
+            this.approvalForm.setFormEdited(false);
+            pageTabManager.openPage("我发起的", "app/approval/flow/sended", {}, [{
+                title: "首页",
+                url: 'app/home/index'
+            }]);
+        },
+
+        /**
+         * 保存操作成功
+         * */
+        approvalSave: function () {
+            // this.removeLocalDraft();
+            this.approvalForm.setFormEdited(false);
+            pageTabManager.openPage("草稿箱", "app/approval/flow/drafts", {}, [{
+                title: "首页",
+                url: 'app/home/index'
+            }]);
+        },
+
+        /**
+         * 审批同意
+         * */
+        approvalAgreed: function () {
+            this.approvalForm.setFormEdited(false);
+            pageTabManager.openPage("待我审批", "app/approval/flow/approval", {}, [{
+                title: "首页",
+                url: 'app/home/index'
+            }]);
+        },
+
+        /**
+         * 审批归档
+         * */
+        approvalArchived: function () {
+            this.approvalForm.setFormEdited(false);
+            pageTabManager.openPage("归档事项", "app/approval/flow/archive", {}, [{
+                title: "首页",
+                url: 'app/home/index'
+            }]);
+        },
+
+        /**
+         * 审批确认
+         * */
+        approvalPresent: function () {
+            this.approvalForm.setFormEdited(false);
+            pageTabManager.openPage("待办事项", "app/approval/flow/approval", {}, [{
+                title: "首页",
+                url: 'app/home/index'
+            }]);
+        },
+
+        /**
+         * 审批拒绝
+         * */
+        approvalRefused: function () {
+            this.approvalForm.setFormEdited(false);
+            pageTabManager.openPage("待办事项", "app/approval/flow/approval", {}, [{
+                title: "首页",
+                url: 'app/home/index'
+            }]);
+        },
+
+        /**
+         * 撤销
+         * */
+        approvalUndo: function () {
+            this.approvalForm.setFormEdited(false);
+            pageTabManager.openPage("我发起的", "app/approval/flow/sended", {}, [{
+                title: "首页",
+                url: 'app/home/index'
+            }]);
+        },
+
+        onPageBreadcrumbItemClick: function (data) {
+            if (data.url && data.url != undefined) {
+                if (data.url == 'app/home/index') {
+                    pageTabManager.openPage(data.title,
+                        data.url, {}, []);
+                } else {
+                    pageTabManager.openPage(data.title,
+                        data.url, {}, data.breadcrumbs);
+                }
+            }
+        },
+
+        /**
+         * 验证表单
+         * */
+        validateForm: function () {
+            return this.approvalForm.validate()
+        },
+
+        /**
+         * 获取表单数据
+         * */
+        getFormData: function () {
+            return this.approvalForm.getFormData()
+        },
+
+        /**
+         * 当界面在切换之前处理
+         * */
+        beforeChangePage: function (title, url, options, breadcrumbs, callback) {
+            var self = this;
+
+            if (!this.approvalForm) {
+                return true
+            }
+
+            if (this.approvalForm.formHasUploading()) {
+                layer.confirm('当前表单有文件正在上传,确定要离开当前界面吗？', {
+                    icon: 3,
+                    title: '温馨提示'
+                }, function (index) {
+                    layer.close(index);
+                    self.approvalForm.setFormEdited(false);
+                    self.approvalForm.ignoreFileUploading = true;
+                    pageTabManager.openPage(title, url, options, breadcrumbs, callback)
+                });
+                return false
+            }
+
+            if (this.approvalForm.formHasEdited()) {
+                layer.confirm('当前表单有数据未提交,确定要离开当前界面吗？', {icon: 3, title: '温馨提示'}, function (index) {
+                    layer.close(index);
+                    self.approvalForm.setFormEdited(false);
+                    self.approvalForm.ignoreFileUploading = true;
+                    pageTabManager.openPage(title, url, options, breadcrumbs, callback)
+                });
+                return false
+            }
+
+            return true
+        },
+
+        destroy: function () {
+            this.loader && this.loader.destroy();
+            this.toolbar.destroy();
+            this.approvalForm.destroy();
+            ApprovalEditPage.superclass.destroy.apply(this);
+        }
+
+    });
+
+    return ApprovalEditPage;
+});

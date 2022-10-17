@@ -1,0 +1,39 @@
+<div class="col-md-12 {{#if add}}{{else}} pt10 {{/if}} pln prn line_condition"
+     data-index="{{index}}"
+     id="line_condition_{{index}}">
+    <select class="select2-single w125 con_type">
+        <option value="1">表单字段</option>
+        <option value="2">申请人职位</option>
+        <option value="3">申请人部门</option>
+        <option value="4">申请人</option>
+    </select>
+
+    <select class="select2-single w150 pl10 con_field"></select>
+
+
+    <select class="select2-single w100 pl10 con_relatio">
+        <option value="include">属于</option>
+        <option value="exclude">不属于</option>
+        <option value="==">等于</option>
+        <option value="!=">不等于</option>
+        <option value=">=">大于等于</option>
+        <option value="<=">小于等于</option>
+        <option value=">">大于</option>
+        <option value="<">小于</option>
+    </select>
+
+    <select class="select2-single w75 pl10 con_relatio2" style="display:none">
+    </select>
+
+    <select class="select2-single w150 pl10 combo_value2"  style="display: none;"></select>
+    <select class="select2-single w200 pl10 combo_value"  style="display: none;"></select>
+
+    <input class="form-control w150 lh40 h-40 pl10 ipt-value" placeholder="请输入条件值"
+           style="display:inline;" data-index="{{index}}">
+    <input type="hidden" class="ipt-select-value" value="[]">
+    {{#if add}}
+        <button type="button" class="btn btn-default pl10 act_add_condition">添加</button>
+    {{else}}
+        <button type="button" class="btn btn-info pl10 act_remove_condition">移除</button>
+    {{/if}}
+</div>

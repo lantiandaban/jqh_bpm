@@ -1,0 +1,32 @@
+<div class="col-md-12 approver" id="approver">
+    <select class="select2-single w100 app_type">
+        <option value="1">组织机构</option>
+        <option value="5">表单字段</option>
+    </select>
+    <select class="select2-single w100 pl10 app_field" style="display:none;">
+    </select>
+    <select class="select2-single w125 pl10 hr_type">
+        <option value="1">指定人员</option>
+<!--        <option value="3">指定职位</option>-->
+        <option value="2">申请人部门</option>
+<!--        <option value="4">申请人直属上级</option>-->
+<!--        <option value="5">申请人上级部门</option>-->
+    </select>
+    <input class="form-control w100 lh40 h-40 pl10 ipt-organization-level" type="number"
+           style="display: none" placeholder="上级部门级别" value="1">
+
+    <select class="select2-single w100 pl10 org_type" style="display: none">
+<!--        <option value="1">部门领导</option>-->
+        <option value="2">部门职位</option>
+    </select>
+    <input class="form-control w200 lh40 h-40 pl10 ipt-approver-value" readonly
+           style="display: inline" placeholder="请选择人员">
+    <input type="hidden" class="ipt-approver-select-value" value="[]">
+    <select class="select2-single w120 pl10 countersign">
+        <option value="1" selected="selected">一票通过</option>
+        <option value="3">按数量通过</option>
+        <option value="4">按百分比通过</option>
+    </select>
+    <input class="form-control w125 lh40 h-40 pl10 ipt-countersign-value"
+           style="display: none;" placeholder="请输入">
+</div>

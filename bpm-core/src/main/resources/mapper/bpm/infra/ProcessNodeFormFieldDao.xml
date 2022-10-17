@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.ProcessNodeFormFieldDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.ProcessNodeFormFieldEntity">
+        <result column="id" property="id" />
+        <result column="version" property="version" />
+        <result column="creation_time" property="creationTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="process_id" property="processId" />
+        <result column="node_id" property="nodeId" />
+        <result column="form_field_id" property="formFieldId" />
+        <result column="form_widget_name" property="formWidgetName" />
+        <result column="visible_flag" property="visibleFlag" />
+        <result column="edit_flag" property="editFlag" />
+    </resultMap>
+
+</mapper>

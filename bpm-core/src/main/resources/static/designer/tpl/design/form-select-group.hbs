@@ -1,0 +1,10 @@
+<div class="select-group">
+    {{#each items}}
+        <div class="select-item">
+            <label class="select-item-{{../selectGroupType}}">
+                <input type="{{../selectGroupType}}" value="{{value}}" {{checkedAttrStr}} name="radio">
+                <span>{{text}}</span>
+            </label>
+        </div>
+    {{/each}}
+</div>

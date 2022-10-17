@@ -1,0 +1,12 @@
+<div class="frame-inner-list">
+    {{#each groups}}
+    <div class="widget-cate">{{title}}</div>
+    <ul>
+        {{#each items}}
+        <li class="form-edit-widget-label" xtype="{{xtype}}">
+            <a><i class="icon-widget-{{icon}}"></i><span>{{name}}</span></a>
+        </li>
+        {{/each}}
+    </ul>
+    {{/each}}
+</div>

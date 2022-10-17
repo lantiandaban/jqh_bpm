@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.DatasourcePopoverDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.DatasourcePopoverEntity">
+        <result column="id" property="id" />
+        <result column="version" property="version" />
+        <result column="creation_time" property="creationTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="datasource_id" property="datasourceId" />
+        <result column="search_fields" property="searchFields" />
+        <result column="table_head_fields" property="tableHeadFields" />
+        <result column="page_flag" property="pageFlag" />
+        <result column="page_size" property="pageSize" />
+    </resultMap>
+
+</mapper>

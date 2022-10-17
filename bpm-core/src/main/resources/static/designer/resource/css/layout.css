@@ -1,0 +1,315 @@
+body {
+    overflow: hidden
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+    font-size: 0;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+#header {
+    display: none;
+    position: relative;
+    width: 100%;
+    height: 60px;
+    background: rgba(255, 255, 255, .8);
+    border-bottom: solid 1px #e0e0e0
+}
+
+#header .nav-install {
+    padding: 0 140px 0 20px;
+    height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+#header .nav-install>.app-title {
+    line-height: 60px;
+    font-size: 20px
+}
+
+#header .nav-install>.install-btn {
+    position: absolute;
+    top: 12px;
+    right: 20px
+}
+
+#header .nav-left {
+    position: absolute;
+    top: 0;
+    right: 290px;
+    bottom: 0;
+    left: 10px;
+    line-height: 60px
+}
+
+#header .nav-right {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    bottom: 0;
+    line-height: 60px
+}
+
+#header .nav-right .x-btn {
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 15px;
+}
+
+#header .nav-home {
+    font-size: 40px;
+    color: #0DB3A6;
+    cursor: pointer
+}
+
+#header .nav-btn {
+    position: relative;
+    float: left;
+    left: 0;
+    margin: 0 5px
+}
+
+#header .nav-btn>.menu {
+    -webkit-transition: all 218ms;
+    -moz-transition: all 218ms;
+    -o-transition: all 218ms;
+    transition: all 218ms;
+    z-index: 100;
+    opacity: 0;
+    display: none;
+    -webkit-transform: translate(0, 0);
+    -moz-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    -o-transform: translate(0, 0);
+    transform: translate(0, 0);
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: #fff;
+    -webkit-box-shadow: 0 0 4px rgba(51, 51, 51, .2);
+    box-shadow: 0 0 4px rgba(51, 51, 51, .2)
+}
+
+#header .nav-btn>.menu:before {
+    content: '';
+    z-index: -1;
+    position: absolute;
+    top: -10px;
+    right: 12px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-bottom-color: #fff
+}
+
+#header .nav-btn:hover>.menu {
+    display: block
+}
+
+#header .nav-btn.open>.menu {
+    -webkit-transform: translate(0, 10px);
+    -moz-transform: translate(0, 10px);
+    -ms-transform: translate(0, 10px);
+    -o-transform: translate(0, 10px);
+    transform: translate(0, 10px);
+    opacity: 1
+}
+
+#header .nav-btn>.btn {
+    display: inline-block;
+    color: #333;
+    cursor: pointer
+}
+
+#header .nav-btn>.btn>i {
+    vertical-align: middle;
+    padding: 0 8px;
+    font-size: 20px
+}
+
+#header .nav-btn.nav-split {
+    padding: 20px 0
+}
+
+#header .nav-btn.nav-split>.split-line {
+    height: 20px;
+    border-right: solid 1px #e0e0e0
+}
+
+#header .nav-btn.nav-manage {
+    margin: 0 15px
+}
+
+#header .nav-btn.nav-manage>.btn {
+    padding: 0 15px;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    border: solid 1px #0DB3A6;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    color: #0DB3A6
+}
+
+#header .nav-btn.nav-manage>.btn:hover {
+    background: #0DB3A6;
+    color: #fff
+}
+
+#header .nav-btn.nav-help .qrcode-dropdown {
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+    padding: 5px 18px 12px 18px;
+    background: #fff
+}
+
+#header .nav-btn.nav-help .qrcode-dropdown .title {
+    line-height: 20px;
+    color: #0DB3A6;
+    border-bottom: solid 2px #0DB3A6;
+    margin: 0 3px 3px 3px
+}
+
+#header .nav-btn.nav-help .qrcode-dropdown .code {
+    width: 140px;
+    height: 140px;
+    background-size: 140px 140px;
+    display: block;
+    margin: 0 auto
+}
+
+#header .nav-btn.nav-help .qrcode-dropdown .dingtalk {
+    background-image: url(https://assets.jiandaoyun.com/v1362/resources/images/dingtalk_code.png)
+}
+
+#header .nav-btn.nav-help .qrcode-dropdown .qq {
+    background-image: url(https://assets.jiandaoyun.com/v1362/resources/images/qq_code.png)
+}
+
+#header .nav-btn.nav-help .qrcode-dropdown .vip {
+    background-image: url(https://assets.jiandaoyun.com/v1362/resources/images/vip_service_code.png)
+}
+
+#header .nav-btn.nav-help .qrcode-dropdown .message {
+    line-height: 16px
+}
+
+#header .nav-btn.nav-message.has-new .icon-news {
+    position: relative
+}
+
+#header .nav-btn.nav-message.has-new .icon-news:after {
+    content: ' ';
+    position: absolute;
+    top: 0;
+    right: 8px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    width: 12px;
+    height: 12px;
+    background: #d9534f;
+    border: solid 2px #fff
+}
+
+#header .menu-pane {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-color: #fff;
+    overflow: hidden
+}
+
+#header .menu-pane .split-line {
+    border-top: solid 1px #f1f1f1
+}
+
+#header .menu-pane>.menu-item {
+    width: 190px;
+    height: 40px;
+    font-size: 14px;
+    line-height: 40px
+}
+
+#header .menu-pane>.menu-item>a {
+    display: block;
+    padding-left: 20px;
+    color: #333
+}
+
+#header .menu-pane>.menu-item>a:hover {
+    background-color: rgba(13, 179, 166, .1)
+}
+
+#header .menu-pane>.menu-user {
+    padding: 10px 10px 10px 18px;
+    cursor: default;
+    color: #333
+}
+
+#header .menu-pane>.menu-user>.menu-info,
+#header .menu-pane>.menu-user>.menu-name {
+    display: block;
+    line-height: 26px;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+#header .menu-pane>.menu-user>.menu-info {
+    font-size: 12px;
+    color: #989898
+}
+
+#header.green {
+    background: #0DB3A6;
+    color: #fff;
+    border: 0
+}
+
+#header.green .nav-home {
+    font-size: 25px;
+    color: #fff
+}
+
+#header.green .nav-btn>.btn {
+    color: #fff
+}
+
+#header.green .nav-btn.nav-split>.split-line {
+    border-color: #fff
+}
+
+#header.green .nav-btn.nav-manage>.btn {
+    border-color: #fff;
+    color: #fff
+}
+
+#header.green .nav-btn.nav-manage>.btn:hover {
+    background: #fff;
+    color: #0DB3A6
+}
+
+#body {
+    position: absolute;
+    /*top: 60px;*/
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0
+}

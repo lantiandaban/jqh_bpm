@@ -1,0 +1,46 @@
+<section class="table-layout personDialg">
+    <div class="row">
+        <div class="col-md-6 pn br-r-n">
+            <div class="panel mbn ">
+                <div class="panel-heading  br-r-n">
+                    <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
+                        <li class="active">
+                            <a  class="tab-select" data-toggle="tab" data-name="org">组织</a>
+                        </li>
+                        <!--<li>-->
+                            <!--<a   class="tab-select" data-toggle="tab" data-name="position">职位</a>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+                <div class="panel-body br-r-n" style="height: 361px;overflow:auto;">
+                    <div class="tab-content pn br-n">
+                        <div id="tab2_2" class="tab-pane active">
+                            <div class="row">
+                                <ul id="person-dialog-org-tree" class="ztree"></ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 pn">
+            <div class="panel panel-widget task-widget ui-sortable mbn br-l-n">
+                <div class="panel-heading cursor">
+                    <span class="panel-title">已选择</span>
+                </div>
+                <div class="panel-body p1" style="height: 361px;">
+                    <ul class="task-list task-completed">
+                        {{#if onlyUser}}
+                        <li class="task-label pb5">
+                            <div class="input-group fluid-width">
+                                    <input class="form-control typeahead" id="keyword" placeholder="输入用户名搜索">
+                            </div>
+                        </li>{{/if}}
+                        <li id="person-dialog-exist-box" style="max-height: 310px; overflow-y: auto;"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

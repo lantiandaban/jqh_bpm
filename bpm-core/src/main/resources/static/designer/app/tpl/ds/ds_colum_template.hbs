@@ -1,0 +1,52 @@
+{{#if emptyp_columns}}
+    <tr>
+        <td>&nbsp;</td>
+        <td colspan="5">暂无数据</td>
+    </tr>
+{{else}}
+    {{#each columns}}
+        <tr id="ds_column_{{index}}" data-id="{{index}}" data-columnname="{{columnName}}"
+            data-datatype="{{dataType}}" data-fieldname="{{fieldName}}">
+            <td class="text-center">
+                <label class="option block mn">
+                    <input type="checkbox" name="dsf_column" value="{{index}}"
+                           {{#if sort}}checked{{/if}}>
+                    <span class="checkbox mn"></span>
+                </label>
+            </td>
+            <td>{{index}}</td>
+            <td>{{columnName}}</td>
+            <td id="display_name_{{index}}" class="pl5 pr5 ptn pbn">
+                {{#if sort}}
+                    <input type="text" name="displyName" value="{{displayName}}"
+                           autocomplete="off"
+                           placeholder="请输入显示名称"
+                           class="gui-input h-30">
+                {{/if}}
+            </td>
+            <td id="ds_sort_{{index}}" class="pl5 pr5 ptn pbn">
+                {{#if sort}}
+                    <input type="text" name="sort" value="{{sort}}" autocomplete="off"
+                           class="gui-input h-30"/>
+                {{/if}}
+            </td>
+            <td id="data_type_{{index}}" class="pl5 pr5 ptn pbn">
+                {{#if sort}}
+                        <select class="select2-single gui-input h-30" name="dataType"
+                                data-toggle="select2" data-placeholder="请选择字段类型" required>
+                            <option value=""></option>
+                            <option {{#ifCond dataType '==' 'string'}}selected{{/ifCond}}
+                                    value="string">string
+                            </option>
+                            <option  {{#ifCond dataType '==' 'number'}}selected{{/ifCond}}
+                                     value="number">number
+                            </option>
+                            <option {{#ifCond dataType '==' 'datetime'}}selected{{/ifCond}}
+                                    value="datetime">datetime
+                            </option>
+                        </select>
+                {{/if}}
+            </td>
+        </tr>
+    {{/each}}
+{{/if}}

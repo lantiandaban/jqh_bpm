@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.ProcessBillTitleDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.ProcessBillTitleEntity">
+        <result column="id" property="id" />
+        <result column="version" property="version" />
+        <result column="creation_time" property="creationTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="process_id" property="processId" />
+        <result column="formula" property="formula" />
+        <result column="time_flag" property="timeFlag" />
+        <result column="time_pattern" property="timePattern" />
+        <result column="process_title" property="processTitle" />
+        <result column="process_type" property="processType" />
+        <result column="creater_flag" property="createrFlag" />
+    </resultMap>
+    <select id="selectByProcessId" resultType="com.srm.bpm.infra.po.BillTitlePO">
+        SELECT
+            pbt.process_id,
+            process_type,
+            process_title,
+            formula,
+            time_flag,
+            time_pattern,
+            creater_flag,
+            tp.name as process_name,
+            pt.name as type_name
+        FROM toa_process tp
+                 LEFT JOIN process_bill_title pbt ON tp.id = pbt.process_id
+                 LEFT JOIN process_type pt ON pt.id = tp.type_id
+        WHERE pbt.is_deleted = 0
+          AND  tp.id = #{processId}
+        LIMIT 1
+    </select>
+
+</mapper>

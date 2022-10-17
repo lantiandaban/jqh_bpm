@@ -1,0 +1,26 @@
+<div class="fileupload " id="trdc_upload_{{id}}">
+    <input type="hidden" value="0" name="{{formName}}Id" class="upload_attachment_id">
+    <input type="hidden" value="{{url}}" name="{{formName}}Url" class="upload_attachment_url">
+    <div class="thumbnail mb10">
+        <div class="row pb10">
+            <div class="col-md-12 text-center">
+                {{#if url}}
+                    <img src="{{viewUrl}}" onerror="this.src='/static/assets/img/noimg.png'"
+                         alt="holder" style="width:{{width}}px; height: {{height}}px;">
+                {{else}}
+                    <img src="{{#ctx 'static/assets/img/avatars/the_default.png'}} {{/ctx}}"
+                         onerror="this.src='/static/assets/img/noimg.png'" alt="holder"
+                         style="width:{{width}}px; height: {{height}}px;">
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <span class="trdc-file">
+                    {{#if url}}更换{{title}}{{else}}请上传{{title}}{{/if}}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

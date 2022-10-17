@@ -1,0 +1,176 @@
+.page-main {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    overflow: auto;
+}
+
+.page-main .page-aside {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+    z-index: 1;
+    border-right: 1px solid #e9e9e9;
+    background-color: #fff;
+    width: 240px;
+}
+
+.page-main .page-right-main {
+    position: absolute;
+    left: 240px;
+    top:0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.page-main.page-main-big-aside .page-aside {
+    width: 440px;
+}
+
+.page-main.page-main-big-aside .page-right-main {
+    left: 440px;
+}
+
+
+.page-main .page-content {
+    padding: 15px;
+    position: relative;
+}
+
+.page-main .page-content-left {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    bottom: 15px;
+}
+
+.page-main .page-content-right {
+    position: absolute;
+    top: 15px;
+    bottom: 15px;
+    right: 15px;
+}
+
+
+
+.search-box {
+    width: 100%;
+    min-height: 30px;
+    padding: 5px 15px;
+    border-bottom: 1px solid #d5d5d5;
+    background: #FFF;
+    position: relative;
+}
+
+.search-box .search-item,
+.search-box .search-action-item {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    float: left;
+}
+
+.search-box .search-item > label {
+    float: left;
+    display: block;
+    width: 100px;
+    padding: 0 5px;
+    height: 34px;
+    line-height: 32px;
+    border: 1px solid #e6e6e6;
+    border-right:none;
+    border-radius: 2px 0 0 2px;
+    text-align: center;
+    background-color: #FBFBFB;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    vertical-align: middle;
+    margin-bottom: 0;
+    font-weight:normal;
+    font-size: 13px;
+}
+
+.search-box .search-item > .search-item-content {
+    vertical-align: middle;
+    height: 34px;
+    margin-bottom: 0;
+    min-width: 100px;
+    overflow: hidden;
+    border: 1px solid #e6e6e6;
+    margin-left: 100px;
+}
+
+.search-box .search-item.search-item-none-title > .search-item-content {
+    margin-left: 0;
+}
+
+.search-box .search-item > label ~ .search-item-content {
+    /*margin-left: -1px;*/
+}
+
+.search-box .search-item > .search-item-content.none-border {
+    border: none;
+}
+
+.search-box .search-item > .search-item-content input,
+.search-box .search-item > .search-item-content textarea {
+    border-color: #e6e6e6;
+    border-radius: 0 2px 2px  0;
+}
+
+
+.search-box .search-item > .search-item-content .ui-radio-group,
+.search-box .search-item > .search-item-content .ui-checkbox-group{
+    padding: 8px 0;
+}
+
+
+.search-box .search-action-item .ui-btn {
+    margin-top: 3px;
+}
+
+.action-bar {
+    padding: 10px 15px;
+    text-align: left;
+}
+
+.action-bar .ui-btn {
+    margin-right: 5px;
+    padding: 0 10px;
+    vertical-align: middle;
+}
+
+
+.right-detail-page .search-box {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.right-detail-page .action-bar {
+    padding: 15px;
+}
+
+.right-detail-page .page-content {
+    padding: 15px;
+}
+
+.right-detail-page .page-content-left {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    bottom: 10px;
+}
+
+.right-detail-page .page-content-right {
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    right: 10px;
+}

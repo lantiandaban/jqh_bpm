@@ -1,0 +1,101 @@
+
+.approval-title {
+    font-size: 17px;
+    font-weight: 400;
+    border-left: 5px solid #2A99FD;
+    padding-left: 20px;
+    margin-top: 20px;
+}
+.approval-items {
+    background-color: #fff;
+    color: #363636;
+    font-size: 13px;
+    border: 1px solid #eee;
+    min-height: 55px;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    position: relative;
+}
+.approval-items>span {
+    margin-right: 25px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.approval-items>span>span {
+    margin-right: 10px;
+}
+.approval-items-id {
+    display: flex;
+    flex-direction: column;
+}
+.approval-items-id .approval-grey-text {
+    font-size: 12px;
+}
+.approval-items .hasDot {
+    position: relative;
+    margin-left: 25px;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.approval-items .hasDot::before {
+    display: block;
+    content: '';
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #BBDEFE;
+    position: absolute;
+    left: -25px;
+}
+.hasDot.dotActive::before {
+    background-color: #2A99FD;
+}
+.approval-items .hasDot::after {
+    display: block;
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #fff;
+    position: absolute;
+    left: -21px;
+}
+.approval-items-id>span:first-child {
+    margin-bottom: 8px;
+}
+.approval-grey-text {
+    color: #A9A9A9;
+    font-size: 13px;
+}
+.approval-items-hp {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+.approval-items-text {
+    background: #F5F5F5;
+    width: 40%;
+    height: 35px;
+    padding: 0 10px;
+}
+.approval-items-minifont {
+    font-size: 12px;
+}
+.active-bac {
+    background-color: #CCE6FE;
+    min-width: 40px;
+    height: 22px;
+    line-height: 22px;
+    text-align: center;
+    border-radius: 5px;
+}
+.approval-status-text {
+    color: #2A99FD;
+    position: absolute;
+    right: 10px;
+}

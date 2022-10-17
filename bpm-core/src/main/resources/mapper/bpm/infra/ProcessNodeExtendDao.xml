@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.ProcessNodeExtendDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.ProcessNodeExtendEntity">
+        <result column="id" property="id"/>
+        <result column="version" property="version"/>
+        <result column="creation_time" property="creationTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="process_id" property="processId"/>
+        <result column="node_id" property="nodeId"/>
+        <result column="node_name" property="nodeName"/>
+        <result column="node_type" property="nodeType"/>
+        <result column="operations" property="operations"/>
+        <result column="node_setting" property="nodeSetting"/>
+        <result column="action_type" property="actionType"/>
+        <result column="link_type" property="linkType"/>
+        <result column="node_action" property="nodeAction"/>
+        <result column="auto_agree" property="autoAgree"/>
+        <result column="batch_approval" property="batchApproval"/>
+        <result column="no_approval_operation" property="noApprovalOperation"/>
+        <result column="countersign_flag" property="countersignFlag"/>
+        <result column="select_approval" property="selectApproval"/>
+        <result column="auto_next_hours" property="autoNextHours"/>
+    </resultMap>
+    <select id="selectByProcessAndNodeType"
+            resultType="com.srm.bpm.infra.entity.ProcessNodeExtendEntity">
+        SELECT id,
+               node_id,
+               node_type,
+               link_type,
+               node_name,
+               node_action,
+               node_setting,
+               operations,
+               auto_agree,
+               batch_approval,
+               no_approval_operation,
+               countersign_flag,
+               select_approval,
+               auto_next_hours
+        FROM process_node_extend
+        WHERE is_deleted = 0
+          AND process_id = #{processId}
+          AND node_type = #{nodeType}
+        ORDER BY creation_time
+    </select>
+    <select id="selectByTaskId"
+            resultType="com.srm.bpm.infra.entity.ProcessNodeExtendEntity">
+        SELECT pne.id,
+               pne.node_id,
+               pne.node_type,
+               pne.link_type,
+               pne.node_name,
+               pne.node_action,
+               pne.node_setting,
+               pne.operations,
+               auto_agree,
+               batch_approval,
+               no_approval_operation,
+               countersign_flag,
+               select_approval,
+               btns
+        FROM process_node_extend pne
+                 INNER JOIN act_ru_task art ON art.TASK_DEF_KEY_ = pne.node_id
+        WHERE pne.is_deleted = 0
+          AND art.ID_ = #{taskId}
+        LIMIT 1
+    </select>
+    <select id="selectByNodeIdAndFlowId"
+            resultType="com.srm.bpm.infra.entity.ProcessNodeExtendEntity">
+        SELECT pne.id,
+               pne.node_id,
+               pne.node_name,
+               pne.node_type,
+               pne.link_type,
+               pne.node_action,
+               pne.operations,
+               pne.node_setting,
+               pne.process_id,
+               auto_agree,
+               batch_approval,
+               no_approval_operation,
+               countersign_flag,
+               select_approval,
+               auto_next_hours
+        FROM process_node_extend pne
+                 INNER JOIN toa_process tp ON tp.id = pne.process_id
+        WHERE pne.is_deleted = 0
+          AND pne.node_id = #{nodeId}
+          AND tp.flow_id = #{flowId}
+        ORDER BY tp.bpm_version DESC
+        LIMIT 1
+    </select>
+    <select id="selectByProcessAndNodeId"
+            resultType="com.srm.bpm.infra.entity.ProcessNodeExtendEntity">
+        SELECT pne.id,
+               pne.node_id,
+               pne.node_type,
+               pne.link_type,
+               pne.node_name,
+               pne.node_action,
+               pne.node_setting,
+               pne.operations,
+               auto_agree,
+               batch_approval,
+               no_approval_operation,
+               countersign_flag,
+               select_approval,
+               auto_next_hours
+        FROM process_node_extend pne
+        WHERE pne.is_deleted = 0
+          AND pne.process_id = #{processId}
+          and pne.node_id = #{nodeId}
+        LIMIT 1
+    </select>
+    <select id="selectByProcessAndLinkType"
+            resultType="com.srm.bpm.infra.entity.ProcessNodeExtendEntity">
+        SELECT id,
+               node_id,
+               node_type,
+               node_name,
+               link_type,
+               node_action,
+               node_setting,
+               operations,
+               auto_agree,
+               batch_approval,
+               no_approval_operation,
+               countersign_flag,
+               select_approval,
+               auto_next_hours
+        FROM process_node_extend
+        WHERE is_deleted = 0
+          AND process_id = #{processId}
+          AND link_type = #{linkType}
+        ORDER BY creation_time
+        LIMIT 1
+    </select>
+
+</mapper>

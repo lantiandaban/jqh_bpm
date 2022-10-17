@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.ToaProcessDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.ToaProcessEntity">
+        <result column="id" property="id"/>
+        <result column="version" property="version"/>
+        <result column="creation_time" property="creationTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="flow_id" property="flowId"/>
+        <result column="name" property="name"/>
+        <result column="type_id" property="typeId"/>
+        <result column="domain" property="domain"/>
+        <result column="display_name" property="displayName"/>
+        <result column="code_id" property="codeId"/>
+        <result column="en_name" property="enName"/>
+        <result column="status" property="status"/>
+        <result column="close_flag" property="closeFlag"/>
+        <result column="description" property="description"/>
+        <result column="sort" property="sort"/>
+        <result column="classic_flag" property="classicFlag"/>
+        <result column="public_flag" property="publicFlag"/>
+        <result column="default_flag" property="defaultFlag"/>
+        <result column="usage_file" property="usageFile"/>
+        <result column="code" property="code"/>
+        <result column="icon_id" property="iconId"/>
+        <result column="diagram_path" property="diagramPath"/>
+        <result column="assistant" property="assistant"/>
+        <result column="bpm_version" property="bpmVersion"/>
+        <result column="bloc_code" property="blocCode"/>
+    </resultMap>
+    <select id="selectByPaging" resultType="com.srm.bpm.infra.po.ProcessGridPO">
+        SELECT tp.id,
+        tp.name,
+        tp.flow_id,
+        tp.display_name,
+        tp.diagram_path,
+        tp.creation_time createTime,
+        tp.sort,
+        tp.type_id,
+        tp.status,
+        tp.code,
+        pt.name AS type_name,
+        tp.icon_id,
+        fs.print_template_url url,
+        fs.form_link, fs.approve_link,
+        tp.assistant manualStartFlag
+        FROM toa_process tp
+        INNER JOIN process_type pt ON pt.id = tp.type_id
+        LEFT JOIN toa_form tf ON tf.process_id=tp.id
+        LEFT JOIN form_setting fs ON fs.form_id = tf.id
+        WHERE tp.is_deleted = 0
+        <if test="tenantFlag">
+            AND tp.bloc_code = #{bloc}
+        </if>
+        <if test="param!=null">
+            <if test="param.name!=null and param.name!=''">
+                AND tp.name LIKE '%${param.name}%'
+            </if>
+            <if test="param.type!=null and param.type!=''">
+                AND pt.id = '${param.type}'
+            </if>
+        </if>
+        ORDER BY tp.sort, tp.creation_time DESC
+    </select>
+    <select id="selectAllByUserCode" resultType="com.srm.bpm.infra.po.ProcessGridPO">
+        select * from (SELECT DISTINCT tp.id,
+        tp.flow_id,
+        tp.name,
+        display_name,
+        en_name,
+        tp.code,
+        tp.type_id,
+        tp.sort,tp.icon_id,
+        fs.form_link, fs.approve_link,
+        tp.assistant manualStartFlag
+        FROM toa_process tp
+        LEFT JOIN process_visual_range pvr ON pvr.process_id = tp.id
+        LEFT JOIN toa_form tf ON tf.process_id=tp.id and tf.is_deleted=0
+        LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
+        WHERE tp.is_deleted = 0
+        AND tp.close_flag = 0
+        AND tp.status = 1
+        AND pvr.id IS NULL
+        <if test="bool">
+            AND tp.bloc_code=#{bloc}
+        </if>
+
+        <if test="name!=null and name!=''">
+            AND tp.name LIKE #{name}
+        </if>
+        UNION ALL
+        SELECT DISTINCT tp.id,
+        tp.flow_id,
+        tp.name,
+        display_name,
+        en_name,
+        tp.code,
+        tp.type_id,
+        tp.sort,tp.icon_id,
+        fs.form_link, fs.approve_link,
+        tp.assistant manualStartFlag
+        FROM toa_process tp
+        LEFT JOIN process_visual_range pvr ON pvr.process_id = tp.id
+        LEFT JOIN toa_form tf ON tf.process_id=tp.id and tf.is_deleted=0
+        LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
+        WHERE tp.is_deleted = 0
+        AND tp.close_flag = 0
+        AND tp.status = 1
+        AND pvr.is_deleted=0 AND tp.bloc_code=#{bloc}
+        <if test="name!=null and name!=''">
+            AND tp.name LIKE #{name}
+        </if>
+        AND (pvr.user_code = #{userCode}
+        <if test="orgs!=null and orgs.size > 0">
+            OR pvr.organization_code IN
+            <foreach collection="orgs" item="o" open="(" separator="," close=")">
+                #{o}
+            </foreach>
+        </if>
+        )
+        ) t
+        ORDER BY t.sort
+    </select>
+    <select id="selectDetailById" resultType="com.srm.bpm.infra.po.ProcessDetailPO">
+        SELECT tp.id,
+               tp.flow_id,
+               tp.name,
+               tp.code_id,
+               tp.status,
+               tp.close_flag,
+               tp.description,
+               tp.version,
+               tp.sort,
+               tp.icon_id,
+               tp.usage_file,
+               display_name,
+               en_name,
+               tp.code,
+               tp.type_id,
+               tp.icon_id,
+               pt.code AS type_code,
+               pt.name AS type_name,
+               tf.detail_field_flag
+        FROM toa_process tp
+                 LEFT JOIN process_type pt ON pt.id = tp.type_id
+                 INNER JOIN toa_form tf ON tf.process_id = tp.id
+        WHERE tp.id = #{processId}
+          AND tp.is_deleted = 0
+          AND tp.close_flag = 0
+        ORDER BY sort
+    </select>
+
+</mapper>

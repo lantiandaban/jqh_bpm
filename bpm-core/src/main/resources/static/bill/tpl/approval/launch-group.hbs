@@ -1,0 +1,19 @@
+{{#each group}}
+    <div class="ui-panel-bd">
+        <div class="ui-panel-bdHd u-t-primary ext-brB">
+            <span class="ui-panel-bdHdT">{{name}}</span>
+        </div>
+        <div class="ui-panel-bdMain">
+            <ul class="ui-panel-list u-clearfix">
+                {{#each flows}}
+                    <li class="ui-panel-listPart"
+                        data-name="{{name}}" data-id="{{id}}">
+                        <img src="{{icon}}" data-src="{{icon}} " alt=""
+                             class="ui-panel-img img-caf lazy">
+                        <a href="javascript:;" class="ui-panel-link is-cafLink view-detail">{{name}}</a>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+{{/each}}

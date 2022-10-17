@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.ProcessNodeApproverDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.ProcessNodeApproverEntity">
+        <result column="id" property="id"/>
+        <result column="version" property="version"/>
+        <result column="creation_time" property="creationTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="process_id" property="processId"/>
+        <result column="node_extend_id" property="nodeExtendId"/>
+        <result column="node_id" property="nodeId"/>
+        <result column="express" property="express"/>
+        <result column="express_params" property="expressParams"/>
+        <result column="dateline" property="dateline"/>
+        <result column="approver" property="approver"/>
+        <result column="countersign" property="countersign"/>
+        <result column="weight" property="weight"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <select id="selectByFlowIdAndNodeId"
+            resultType="com.srm.bpm.infra.entity.ProcessNodeApproverEntity">
+        SELECT pna.id,
+               pna.process_id,
+               pna.node_extend_id,
+               pna.express_params,
+               pna.express,
+               pna.approver,
+               pna.weight,
+               pna.countersign
+        FROM process_node_approver pna
+                 INNER JOIN toa_process tp ON tp.id = pna.process_id
+        WHERE tp.is_deleted = 0
+          AND pna.is_deleted = 0
+          AND tp.flow_id = #{flowId}
+          AND node_id = #{nodeId}
+        ORDER BY pna.weight DESC
+    </select>
+    <select id="getByIdExludDel"
+            resultType="com.srm.bpm.infra.entity.ProcessNodeApproverEntity">
+        select * from process_node_approver where id=#{id} LIMIT 1
+    </select>
+
+</mapper>

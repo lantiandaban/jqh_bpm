@@ -1,0 +1,199 @@
+/*.approval-form-action-toolbar {text-align: left;padding: 0 0 10px;margin-bottom: 5px}*/
+.approval-form-action-toolbar {text-align: right;padding: 0 0 10px;left: 0;position: fixed;bottom: 0;width: 100%;}
+
+.approval-form-action-toolbar .ui-btn {margin-right: 10px;padding: 0 10px}
+
+.approval-form-row {border: 1px solid #e1e1e1;margin-top: -1px}
+
+.approval-form-row.approval-form-row-hidden {display: none}
+
+.approval-form-row.approval-form-row-margin {margin-top: 15px;margin-bottom: 15px}
+
+.approval-form-row > .approval-form-table {table-layout: fixed;width: 100%;border-collapse: separate;border-spacing: 0;text-align: left}
+
+.approval-form-table .approval-form-row-column {border-right: 1px solid #e1e1e1;word-break: break-all;padding: 0;vertical-align: middle;min-height: 35px;height: 35px;position: relative}
+
+.approval-form-table tr td.approval-form-row-column:last-child {border-right-color: transparent}
+
+.approval-form-table .approval-form-row-column.approval-form-row-column-empty {border-right-width: 0 !important;background: 0 0 !important;visibility: hidden !important}
+
+.approval-form-table .approval-form-row-column.approval-form-row-column-empty .approval-form-item, .approval-form-table .approval-form-row-column.approval-form-row-column-empty .approval-form-item-title {display: none !important}
+
+.approval-form-table tr .approval-form-row-column.approval-form-row-column-empty:last-child {border-right-width: 1px !important}
+
+.approval-form-table tr .approval-form-row-column.approval-form-row-column-disable:after {content: "";position: absolute;left: 0;right: 0;top: 0;bottom: 0;z-index: 1;cursor: not-allowed;opacity: .2}
+
+.approval-form-table .approval-form-row-column.title {padding: 8px;font-size: 13px;background: #fafafa;text-align: right;line-height: 20px}
+
+.approval-form-table .approval-form-row-column.title.required:before {content: '* ';display: inline-block;color: #ff8c00;margin-right: 3px}
+
+.approval-form-table .approval-form-item {margin: 0;position: relative;padding-right: 1px}
+
+.approval-form-table .approval-form-item-hidden {visibility: hidden !important}
+
+.approval-form-table .approval-form-row-column.error:before {content: '';display: block;position: absolute;left: -1px;right: -1px;bottom: -1px;height: 1px;background: #ff4500;border: 0;z-index: 1}
+
+.approval-form-table .approval-form-row-column.error .approval-form-item {padding-right: 30px}
+
+.approval-form-table .approval-form-row-column.error .approval-form-item-error {display: block;position: absolute;top: 0;right: 0;bottom: -2px;width: 30px;cursor: pointer;z-index: 1}
+
+.approval-form-table .approval-form-row-column.error .approval-form-item-error i {display: table;width: 100%;height: 100%;color: #ff4500;text-align: center;font-size: 14px}
+
+.approval-form-table .approval-form-row-column.error .approval-form-item-error i:after {font-family: ui-icon;content: "\E62D";display: table-cell;vertical-align: middle}
+
+.approval-form-table .ui-input input, .approval-form-table .ui-input-trigger .ui-combo-tags, .approval-form-table .ui-input-trigger .ui-input-trigger-input {border: 0}
+
+.approval-form-table .approval-form-detail-group .ui-textarea {min-height: 34px}
+
+.approval-form-table .approval-form-detail-group .ui-textarea .pre, .approval-form-table .approval-form-detail-group .ui-textarea textarea {padding-top: 8px;min-height: 34px}
+
+.approval-form-table .form-item-checkbox .ui-checkbox-group-item, .approval-form-table .form-item-radio .ui-radio-group-item {line-height: 26px}
+
+.approval-form-single-text, .approval-form-viewMode-text {min-height: 28px;font-size: 14px;display: inline-block;padding: 7px;color: rgba(0, 0, 0, .65)}
+
+.approval-form-checkboxgroup, .approval-form-fileupload, .approval-form-radiogroup {padding: 0 7px}
+
+.approval-form-fileupload-header {padding: 7px 0;overflow: hidden}
+
+.approval-form-fileupload-body .approval-form-fileupload-results {list-style: none;font-size: 0}
+
+.approval-form-fileupload-results .approval-form-fileupload-item {font-size: 13px;border: 1px solid #e9e9e9;margin: 0 8px 8px 0;display: inline-block;width: 200px;height: 150px;position: relative;border-radius: 4px;overflow: hidden}
+
+.approval-form-fileupload-results .approval-form-fileupload-item:hover {box-shadow: 0 1px 3px rgba(0, 0, 0, .1)}
+
+.approval-form-fileupload-results .approval-form-fileupload-item:hover .approval-form-fileupload-item-content {opacity: .8}
+
+.approval-form-fileupload-item .approval-form-fileupload-item-content {height: 75pt;padding: 1px;text-align: center;overflow: hidden}
+
+.approval-form-fileupload-item .approval-form-fileupload-item-content img {max-width: 100%;height: auto;background-repeat: no-repeat;background-position: center center;cursor: pointer}
+
+.approval-form-fileupload-item .approval-form-fileupload-item-content span {font-size: 30px;color: rgba(0, 0, 0, .43);display: block;height: 5pc;line-height: 5pc}
+
+.approval-form-fileupload-item .approval-form-fileupload-toolbar {display: none;position: absolute;top: 5px;right: 5px;height: 24px;width: 100px;text-align: right}
+
+.approval-form-fileupload-item:hover .approval-form-fileupload-toolbar {display: block}
+
+.approval-form-fileupload-item .approval-form-fileupload-toolbar i {display: inline-block;margin-left: 5px;width: 24px;height: 24px;text-align: center;line-height: 24px;background: #AAA;border-radius: 3px;cursor: pointer}
+
+.approval-form-fileupload-item .approval-form-fileupload-toolbar i:after {display: block;font-family: ui-icon;font-size: 14px;text-align: center;color: #fff}
+
+.approval-form-fileupload-item .approval-form-fileupload-toolbar i.download:after {content: "\E6B7"}
+
+.approval-form-fileupload-item .approval-form-fileupload-toolbar i.search:after {content: '\E688'}
+
+/*!*color: red;*!*/
+.approval-form-fileupload-item .approval-form-fileupload-item-info {position: absolute;left: 0;right: 0;bottom: 0;height: 50px;padding: 6px 8px;background-color: #f8f8f8;border-top: 1px solid #e7eaec}
+
+.approval-form-fileupload-item .approval-form-fileupload-item-info .name {display: block;color: rgba(0, 0, 0, .65);white-space: nowrap;overflow: hidden;text-overflow: ellipsis}
+
+.approval-form-fileupload-item .approval-form-fileupload-item-info small {color: rgba(0, 0, 0, .43)}
+
+.approval-form-fileupload-item .approval-form-fileupload-item-remove {display: none;position: absolute;right: 2px;top: 2px;height: 15px;width: 15px;z-index: 1;background: #000;cursor: pointer;text-align: center}
+
+.approval-form-fileupload-item .approval-form-fileupload-item-remove:after {display: block;content: '\E633';color: #fff;font-family: ui-icon;height: 15px;width: 15px;line-height: 1pc}
+
+.approval-form-fileupload-item:hover .approval-form-fileupload-item-remove {display: block}
+
+.approval-form-fileupload-item .approval-form-fileupload-item-progress {position: absolute;left: -1px;top: 93px;height: 5px;background-color: #00a854;width: 0;z-index: 1}
+
+.approval-form-detail-group {position: relative}
+
+.approval-form-detail-group .approval-form-detail-group-header {position: relative;height: 36px;border-bottom: 1px solid #d9d9d9;background: #f8f9fc;padding: 0 10px;font-size: 13px}
+
+.approval-form-detail-group .approval-form-detail-group-header .approval-form-detail-group-title {font-size: 14px;line-height: 36px;margin-right: 200px}
+
+.approval-form-detail-group .approval-form-detail-group-header .approval-form-detail-group-actions {position: absolute;top: 0;bottom: 0;right: 4px;padding-top: 4px}
+
+.approval-form-detail-group .approval-form-detail-group-header .approval-form-detail-group-actions .ui-btn {height: 26px;line-height: 24px;padding: 0 10px;margin-left: 5px}
+
+.approval-form-detail-group .approval-form-detail-group-body {position: relative;font-size: 0;overflow: hidden}
+
+.approval-form-detail-group table {table-layout: fixed;border-collapse: separate;border-spacing: 0;text-align: left;overflow: hidden}
+
+.approval-form-detail-group table th {padding: 0 8px;line-height: 30px;background: #fafafa;font-size: 13px;font-weight: 400;border-right: 1px solid #d9d9d9;border-bottom: 1px solid #d9d9d9}
+
+.approval-form-detail-group table th.required:before {content: '* ';display: inline-block;color: #ff8c00;margin-right: 3px}
+
+.approval-form-detail-group table tbody td, .approval-form-detail-group table tfoot td {min-height: 35px;height: 35px;padding: 0;vertical-align: middle;word-break: break-all;border-right: 1px solid #e1e1e1;border-bottom: 1px solid #d9d9d9;background-color: #fff;font-size: 13px}
+
+.approval-form-detail-group table tfoot td {background-color: #fafafa;line-height: 1pc;height: 2pc}
+
+.approval-form-detail-group table tfoot td.subtotal {border-right-color: transparent;padding: 7px;color: #ff8c00}
+
+.approval-form-detail-group table tfoot td.subtotal:last-child {border-right-color: #e1e1e1}
+
+.approval-form-detail-group .approval-form-detail-group-fixed-left tfoot td {border-right-color: #e1e1e1 !important;padding: 7px}
+
+.approval-form-detail-group table td .ui-input input, .approval-form-detail-group table td .ui-input-trigger .ui-combo-tags, .approval-form-detail-group table td .ui-input-trigger .ui-input-trigger-input {border: 0}
+
+.approval-form-detail-group .approval-form-detail-group-fixed-left {position: absolute;left: 0;top: 0;bottom: 0;z-index: 2;box-shadow: 4px 0 6px -4px rgba(0, 0, 0, .2)}
+
+.approval-form-detail-group .approval-form-detail-group-fixed-left td, .approval-form-detail-group .approval-form-detail-group-fixed-left th {text-align: center !important}
+
+.approval-form-detail-group .approval-form-detail-group-fixed-right {position: absolute;right: 0;top: 0;bottom: 0;z-index: 2;box-shadow: -4px 0 6px -4px rgba(0, 0, 0, .2)}
+
+.approval-form-detail-group .approval-form-detail-group-fixed-right td, .approval-form-detail-group .approval-form-detail-group-fixed-right th {border-left: 1px solid #d9d9d9;border-right: 0;text-align: center}
+
+.approval-form-detail-group .approval-form-detail-group-inner {width: 100%;padding-left: 50px;overflow-x: auto;overflow-y: hidden}
+
+.approval-form-detail-group .approval-form-detail-group-inner table th.hidden {visibility: hidden}
+
+.approval-form-detail-group table tbody tr:last-child td {border-bottom-color: transparent !important}
+
+.approval-form-detail-group table tfoot td {border-top: 1px solid #d9d9d9;border-bottom: none !important}
+
+.approval-form-table .approval-form-detail-group-inner tr td.approval-form-row-column:last-child {border-right-color: #e1e1e1}
+
+.approval-form-opinion {margin-top: 15px;display: none}
+
+.approval-form-opinion .approval-form-opinion-header {position: relative;height: 36px;line-height: 36px;background: #f8f9fc;padding: 0 10px;font-size: 13px;border: 1px solid #e9e9e9;border-bottom: 0;text-align: center}
+
+.approval-form-opinion .approval-form-opinion-body {position: relative;overflow: hidden;font-size: 13px}
+
+.approval-form-opinion .approval-form-opinion-body td:not(.ui-table-col-title) {color: rgba(0, 0, 0, .65)}
+
+.approval-import-detail-wrapper .g-row {margin-bottom: 8px}
+
+.approval-import-detail-wrapper .g-row .g-col-3, .approval-import-detail-wrapper .g-row .g-col-9 {font-size: 13px;height: 34px;line-height: 34px;vertical-align: middle}
+
+.approval-track-timeline {margin-top: 30px}
+
+.approval-track-timeline .approval-track-timeline-item {position: relative;box-sizing: border-box;height: 5pc;margin-top: 10px;margin-left: 5pc;font-size: 14px;line-height: 14px}
+
+.approval-track-timeline .approval-track-timeline-item p {margin-bottom: 5px}
+
+.approval-track-timeline .approval-track-timeline-item .status {font-size: 13px}
+
+.approval-track-timeline .approval-track-timeline-item .time {color: rgba(0, 0, 0, .25);font-size: 13px}
+
+.approval-track-timeline-item .approval-track-timeline-tail {position: absolute;top: 40px;left: -39px;width: 4px;height: 40px;background: #3fa0ec}
+
+.approval-track-timeline .approval-track-timeline-item:last-child .approval-track-timeline-tail {display: none}
+
+.approval-track-timeline-item .approval-track-timeline-head {position: absolute;top: -5px;left: -57px;box-sizing: border-box;width: 40px;height: 40px;padding-top: 8px;font-size: 20px;font-weight: 700;border: 4px solid #3fa0ec;border-radius: 50%;background: #fff;text-align: center;font-style: normal}
+
+.approval-track-timeline .approval-track-timeline-item-warning .approval-track-timeline-head {border-color: coral;color: coral}
+
+.approval-track-timeline .approval-track-timeline-item-warning .status {color: coral}
+
+#approvalTotalRightBody {position: absolute;right: 0;top: 0;bottom: 0;width: 360px;z-index: 1;background: #fff;border-left: 1px solid #ddd;display: none}
+
+#approvalTotalRightBody i.close {display: block;position: absolute;right: 0;top: 0;width: 30px;height: 30px;line-height: 30px;cursor: pointer;color: #222;font-size: 17px;font-style: normal;vertical-align: baseline;text-align: center;text-transform: none;text-rendering: auto}
+
+#approvalTotalRightBody i.close:after {content: "\E633";display: block;font-family: ui-icon}
+
+#approvalTotalRightBody .charts-content {height: 300px;width: 100%;margin-top: 20px;padding-bottom: 10px;border-bottom: 1px solid #ddd}
+
+#approvalTotalRightBody .table-content {position: absolute;left: 0;right: 0;bottom: 0;top: 321px;overflow: auto}
+
+#approvalTotalRightBody .table-content tr {cursor: pointer}
+
+#approvalTotalRightBody .content-empty {position: absolute;left: 0;right: 0;top: 200px;height: 200px;text-align: center;display: none}
+
+#approvalTotalRightBody .content-empty img {width: 200px;margin: 0 auto}
+
+#approvalTotalRightBody .content-empty span {display: block}
+
+#approvalTotalRightBody.empty .charts-content, #approvalTotalRightBody.empty .table-content {display: none}
+
+#approvalTotalRightBody.empty .content-empty {display: block}

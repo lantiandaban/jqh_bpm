@@ -1,0 +1,112 @@
+{{#each this}}
+    <tr id="approver_table_{{id}}">
+        <td>{{inc @index}}</td>
+        <td style="word-break:break-all; word-wrap:break-word;">
+            {{#each condition}}
+                {{#if @index}}并且{{/if}}
+                {{#ifCond type '==' '1'}}
+                    {{field.name}}{{relation relation}}{{value}}
+                {{/ifCond}}
+                {{#ifCond type '==' '2'}}
+                    申请人职位{{relation relation}}{{#each positions}}{{#if @index}},
+                {{/if}}{{name}}{{/each}}
+                {{/ifCond}}
+                {{#ifCond type '==' '3'}}
+                    申请人部门{{relation relation}}({{#each organizations}}{{#if @index}},
+                {{/if}}{{name}}{{/each}})
+                {{/ifCond}}
+                {{#ifCond type '==' '4'}}
+                    申请人{{relation relation}}({{#each users}}{{#if @index}},
+                {{/if}}{{name}}{{/each}})
+                {{/ifCond}}
+                {{#ifCond type '==' '5'}}
+                    项目类型{{relation relation}}({{#each projectTypes}}{{#if @index}},
+                {{/if}}{{name}}{{/each}})
+                {{/ifCond}}
+                {{#ifCond type '==' '6'}}
+                    申请人项目关系{{relation relation}}({{#each userProjects}}{{#if @index}},
+                {{/if}}{{name}}{{/each}})
+                {{/ifCond}}
+                {{#ifCond type '==' '7'}}
+                    无条件
+                {{/ifCond}}
+            {{/each}}
+        </td>
+        <td>
+            {{#ifCond subject.type "==" "1"}}
+                {{#ifCond subject.hrType "==" "1"}}
+                    {{#each subject.users}}{{#if @index}},{{/if}}{{name}}{{/each}}
+                {{/ifCond}}
+                {{#ifCond subject.hrType "==" "2"}}
+                    {{#ifCond subject.orgType "==" "1"}}
+                        部门领导
+                    {{/ifCond}}
+                    {{#ifCond subject.orgType "==" "2"}}
+                        {{#each subject.positions}}{{#if @index}},{{/if}}{{name}}{{/each}}
+                    {{/ifCond}}
+                {{/ifCond}}
+                {{#ifCond subject.hrType "==" "3"}}
+                    {{#each subject.positions}}{{#if @index}},{{/if}}{{name}}{{/each}}
+                {{/ifCond}}
+                {{#ifCond subject.hrType "==" "4"}}
+                    申请人直属上级
+                {{/ifCond}}
+                {{#ifCond subject.hrType "==" "5"}}
+                    申请人部门{{subject.level}}级部门
+                    {{#ifCond subject.orgType "==" "1"}}
+                        部门领导
+                    {{/ifCond}}
+                    {{#ifCond subject.orgType "==" "2"}}
+                        {{#each subject.positions}}{{#if @index}},{{/if}}{{name}}{{/each}}
+                    {{/ifCond}}
+                {{/ifCond}}
+            {{/ifCond}}
+            {{#ifCond subject.type "==" "2"}}
+                {{#ifCond subject.project.type "==" "1"}}
+                    项目经理
+                {{/ifCond}}
+                {{#ifCond subject.project.type "==" "2"}}
+                    项目总监
+                {{/ifCond}}
+                {{#ifCond subject.project.type "==" "3"}}
+                    售前负责人
+                {{/ifCond}}
+            {{/ifCond}}
+            {{#ifCond subject.type "==" "3"}}
+                {{#ifCond subject.customer.type "==" "1"}}
+                    客户经理
+                {{/ifCond}}
+            {{/ifCond}}
+            {{#ifCond subject.type "==" "5"}}
+                {{subject.field.name}}
+            {{/ifCond}}
+        </td>
+        <td>
+            {{#ifCond countersign.type "==" "1"}}
+                一票通过
+            {{/ifCond}}
+            {{#ifCond countersign.type "==" "3"}}
+                按{{countersign.count}}票通过
+            {{/ifCond}}
+            {{#ifCond countersign.type "==" "4"}}
+                按{{countersign.count}}%通过
+            {{/ifCond}}
+        </td>
+        <td>
+            <a data-type="text" class="weight" href="#" data-id="{{id}}">{{weight}}</a>
+        </td>
+        <td>
+            <button type="button" class="btn btn-system btn-sm act-remove" data-id="{{id}}">
+                <i class="fa fa-times"></i>
+            </button>
+        </td>
+    </tr>
+{{else}}
+    <tr>
+        <td colspan="5">
+            <div class="alert alert-default alert-dismissable m30">
+                <p>暂无审批设置，请点击新增按钮添加审批设置</p>
+            </div>
+        </td>
+    </tr>
+{{/each}}

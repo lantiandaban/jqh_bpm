@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <groupId>com.srm.bpm</groupId>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>srm-bpm-service</artifactId>
+    <packaging>pom</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+    <modules>
+        <module>base-pom</module>
+        <module>common</module>
+        <module>bpm-pom</module>
+        <module>bpm-server</module>
+        <module>devtools</module>
+        <module>bpm-core</module>
+        <module>bpm-client</module>
+        <module>bpm-client-base</module>
+        <module>bpm-client-http</module>
+    </modules>
+</project>

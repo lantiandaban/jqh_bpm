@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.srm.bpm.infra.dao.FormExpressionDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.srm.bpm.infra.entity.FormExpressionEntity">
+        <result column="id" property="id" />
+        <result column="version" property="version" />
+        <result column="creation_time" property="creationTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="form_id" property="formId" />
+        <result column="field_id" property="fieldId" />
+        <result column="param_operator" property="paramOperator" />
+        <result column="param_value" property="paramValue" />
+        <result column="expression" property="expression" />
+        <result column="sort" property="sort" />
+    </resultMap>
+    <select id="selectByProcessId"
+            resultType="com.srm.bpm.infra.entity.FormExtensionsEntity">
+        SELECT fe.id, fe.form_id, fe.title, fe.feature, fe.type
+        FROM form_extensions fe INNER JOIN toa_form tf ON tf.id = fe.form_id
+        WHERE fe.is_deleted = 0 AND tf.is_deleted = 0 AND tf.process_id = #{processId}
+        ORDER BY fe.creation_time DESC
+    </select>
+
+</mapper>
