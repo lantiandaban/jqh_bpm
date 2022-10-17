@@ -8,8 +8,9 @@
 
     <parent>
         <groupId>com.srm.bpm</groupId>
-       <artifactId>bpm-pom</artifactId>
-          <version>0.0.1-SNAPSHOT</version>
+        <artifactId>bpm-pom</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath/>
     </parent>
 
     <artifactId>bpm-client</artifactId>
