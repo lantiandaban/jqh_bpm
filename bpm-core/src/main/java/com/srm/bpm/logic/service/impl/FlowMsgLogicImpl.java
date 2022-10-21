@@ -75,7 +75,8 @@ public class FlowMsgLogicImpl implements FlowMsgLogic {
                     allMsg.addAll(flowMsgDTOS);
                 }
                 log.debug("推送的消息是:{}", allMsg);
-                pushMsgLogic.push(allMsg);
+//                TODO 注释消息
+//                pushMsgLogic.push(allMsg);
             }
         }
     }
