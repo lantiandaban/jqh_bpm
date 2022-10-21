@@ -29,4 +29,6 @@ public class BpmConfig {
     private Integer type;
 
     private String callbackUrl;
+    
+    private String pushmsgUrl;
 }

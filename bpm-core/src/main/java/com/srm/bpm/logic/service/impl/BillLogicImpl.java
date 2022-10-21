@@ -677,6 +677,7 @@ public class BillLogicImpl implements BillLogic {
                 taskOpt = billBpmnLogic.findTaskBybillAndEmployeeAndTaskId(billId, taskId, userCode);
                 if (taskOpt.isPresent()) {
                     BillTaskEntity billTask = taskOpt.get();
+                    billTask.setOpinion(opinion);
                     final int nodeStatus = billTask.getNodeStatus();
                     BillTaskStatus billTaskStatus = BillTaskStatus.valueTo(nodeStatus);
                     final Integer taskType = billTask.getTaskType();
