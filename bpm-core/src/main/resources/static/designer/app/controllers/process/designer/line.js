@@ -1,5 +1,3 @@
-  
-
 /**
  *
  * @author sog
@@ -30,17 +28,17 @@ require(
 
         var includeRelatios = [
             {id: 'include', text: '包含'}
-            ,  {id: 'exclude', text: '不包含'}
+            , {id: 'exclude', text: '不包含'}
         ];
 
         var existRelatios = [
             {id: 'exist', text: '存在'}
-            ,  {id: 'nothingness', text: '不存在'}
+            , {id: 'nothingness', text: '不存在'}
         ];
 
         var yesRelations = [
             {id: 'is', text: '是'}
-            ,  {id: 'not', text: '不是'}
+            , {id: 'not', text: '不是'}
         ];
 
         var tbodyTpl = Handlebars.compile(tbodyTxt);
@@ -359,10 +357,14 @@ require(
                                 callback: function (choiceOrganizations) {
                                     if (choiceOrganizations) {
                                         var names = [];
+                                        var orgArray = [];
                                         $.each(choiceOrganizations, function (i, val) {
                                             names.push(val.name);
+                                            val.id = val.id.replace("ORG", "");
+                                            val.pid = val.pid.replace("ORG", "");
+                                            orgArray.push(val);
                                         });
-                                        iptSelect.val(JSON.stringify(choiceOrganizations));
+                                        iptSelect.val(JSON.stringify(orgArray));
                                         iptValue.val(names.join(','));
                                     }
                                 }
@@ -375,10 +377,13 @@ require(
                                 callback: function (choiceOrganizations) {
                                     if (choiceOrganizations) {
                                         var names = [];
+                                        var userArray = [];
                                         $.each(choiceOrganizations, function (i, val) {
                                             names.push(val.name);
+                                            val.orgId = val.orgId.replace("ORG", "");
+                                            userArray.push(val)
                                         });
-                                        iptSelect.val(JSON.stringify(choiceOrganizations));
+                                        iptSelect.val(JSON.stringify(userArray));
                                         iptValue.val(names.join(','));
                                     }
                                 }
@@ -492,7 +497,10 @@ require(
                                         var comboValues = $conditionIndexPanel.find('select.combo_value').select2('data');
                                         if (comboValues && comboValues.length > 0) {
                                             var userProjectSelect = comboValues[0];
-                                            data['userProject'] = {id: userProjectSelect.id, name: userProjectSelect.text};
+                                            data['userProject'] = {
+                                                id: userProjectSelect.id,
+                                                name: userProjectSelect.text
+                                            };
                                         }
                                         break;
                                     case 7:
@@ -530,7 +538,10 @@ require(
                                             var roleSize_8 = projectRole_8.length;
                                             for (var r_index_8 = 0; r_index_8 < roleSize_8; r_index_8++) {
                                                 p_role_8 = projectRole_8[r_index_8];
-                                                p_roles_8.push({id: p_role_8.id, name: p_role_8.text})
+                                                p_roles_8.push({
+                                                    id: p_role_8.id,
+                                                    name: p_role_8.text
+                                                })
                                             }
                                             data['projectRoles'] = p_roles_8;
                                             console.log('p_roles_8', p_role_8);

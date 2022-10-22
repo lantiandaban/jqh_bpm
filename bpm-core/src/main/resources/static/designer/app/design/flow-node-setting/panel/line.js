@@ -85,8 +85,10 @@ define(function (require, exports, module) {
                     yes: function (index, layero) {
                         var body = layer.getChildFrame('body', index); //LAYER对象下的方法，获取子iframe中的DOM
                         var conditionText = body.contents().find('#condition_val').val();
+                        console.log(conditionText);
                         if (conditionText && conditionText.length > 0) {
-                            self.setNodeSetting('conditions', JSON.parse(conditionText));
+                            var conditions = JSON.parse(conditionText);
+                            self.setNodeSetting('conditions', conditions);
                         }
                         layer.close(index);
                     }

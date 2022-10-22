@@ -744,6 +744,7 @@ require(['text!view/process/approver_table_tbody.hbs'
                     countersign: countersign,
                     id: JTDC.guid()
                 });
+                console.log(page.approverCondition);
                 $(page.el.val).val(JSON.stringify(page.approverCondition));
                 page.renderTable();
                 layer.close(index);

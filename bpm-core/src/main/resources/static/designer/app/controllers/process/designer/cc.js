@@ -330,6 +330,7 @@ require(['text!view/process/cc_table_tbody.hbs',
                             subject: subjects,
                             id: JTDC.guid()
                         });
+                        console.log(ccCondition);
                         $(el.val).val(JSON.stringify(ccCondition));
                         renderTable();
                         layer.close(index);
