@@ -1,5 +1,3 @@
-  
-
 /**
  *
  * @author yishin
@@ -105,10 +103,13 @@ require(['text!view/process/cc_table_tbody.hbs',
                     callback: function (choiceOrganizations) {
                         if (choiceOrganizations) {
                             var names = [];
+                            var userArray=[];
                             $.each(choiceOrganizations, function (i, val) {
                                 names.push(val.name);
+                                val.orgId=val.orgId.replace("ORG","");
+                                userArray.push(val);
                             });
-                            iptSelect.val(JSON.stringify(choiceOrganizations));
+                            iptSelect.val(JSON.stringify(userArray));
                             iptValue.val(names.join(','));
                         }
                     }
@@ -194,10 +195,14 @@ require(['text!view/process/cc_table_tbody.hbs',
                                 callback: function (choiceOrganizations) {
                                     if (choiceOrganizations) {
                                         var names = [];
+                                        var orgArray = [];
                                         $.each(choiceOrganizations, function (i, val) {
                                             names.push(val.name);
+                                            val.id = val.id.replace("ORG", "");
+                                            val.pid = val.pid.replace("ORG", "");
+                                            orgArray.push(val);
                                         });
-                                        iptSelect.val(JSON.stringify(choiceOrganizations));
+                                        iptSelect.val(JSON.stringify(orgArray));
                                         iptValue.val(names.join(','));
                                     }
                                 }
