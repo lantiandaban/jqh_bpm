@@ -13,6 +13,7 @@ import com.srm.bpm.logic.constant.BillTaskType;
 import com.srm.bpm.logic.constant.StringPool;
 import com.srm.bpm.logic.dto.FlowMsgDTO;
 import com.srm.bpm.logic.service.FlowMsgLogic;
+import com.srm.bpm.logic.service.PushMsgLogic;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FlowMsgLogicImpl implements FlowMsgLogic {
     private final ToaBillService billService;
+    private final PushMsgLogic pushMsgLogic;
 
     @Override
     public void sendMsg(List<BillTaskEntity> billTaskEntities) {
@@ -73,6 +75,8 @@ public class FlowMsgLogicImpl implements FlowMsgLogic {
                     allMsg.addAll(flowMsgDTOS);
                 }
                 log.debug("推送的消息是:{}", allMsg);
+//                TODO 注释消息
+//                pushMsgLogic.push(allMsg);
             }
         }
     }
