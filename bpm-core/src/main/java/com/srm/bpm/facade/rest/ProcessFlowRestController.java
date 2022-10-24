@@ -42,6 +42,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -55,6 +56,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequiredArgsConstructor
 @RequestMapping("/flow/process/rest")
 @Api(tags = "流程管理")
+@Slf4j
 public class ProcessFlowRestController {
     private final DataSourceProperties dataSourceProperties;
     private final ProcessFlowLogic processFlowLogic;
@@ -64,11 +66,7 @@ public class ProcessFlowRestController {
     private final BpmConfig bpmConfig;
 
     @ApiOperation(value = "分页查询流程", httpMethod = "GET")
-    @ApiImplicitParams(
-            {
-                    @ApiImplicitParam(name = "page", defaultValue = "1"),
-                    @ApiImplicitParam(name = "limit", defaultValue = "10")
-            })
+    @ApiImplicitParams({@ApiImplicitParam(name = "page", defaultValue = "1"), @ApiImplicitParam(name = "limit", defaultValue = "10")})
     @GetMapping("/list")
     public R<List<ProcessGridDTO>> grid(
             @ApiIgnore @RequestParam Map<String, Object> params
@@ -76,7 +74,8 @@ public class ProcessFlowRestController {
         final Integer pageNo = Integer.valueOf((String) params.get("page"));
         final Integer pageSize = Integer.valueOf((String) params.get("limit"));
         final String bloc = loginUserHolder.getBloc();
-        Pair<List<ProcessGridDTO>, Long> pair = processFlowLogic.getProcessFlowByPage(pageNo, pageSize, params, bloc);
+        Pair<List<ProcessGridDTO>, Long> pair =
+                processFlowLogic.getProcessFlowByPage(pageNo, pageSize, params, bloc);
         return R.ok(pair.getKey(), pair.getValue());
     }
 
@@ -163,9 +162,9 @@ public class ProcessFlowRestController {
      */
     @PostMapping("process/save")
     public R save(
-            @RequestParam("data") String processDesingerData,
-            @RequestParam("id") long processId
+            @RequestParam("data") String processDesingerData, @RequestParam("id") long processId
     ) {
+        log.info("提交的流程数据:\n{}", processDesingerData);
         this.processDesingerLogic.saveProcessAndSetting(processDesingerData, processId);
         return R.empty();
     }
@@ -198,7 +197,9 @@ public class ProcessFlowRestController {
     }
 
     @PostMapping("/temp/save/{id}")
-    public R savePrintTemp(@PathVariable(value = "id") long processId, @RequestParam("file") MultipartFile var1) {
+    public R savePrintTemp(
+            @PathVariable(value = "id") long processId, @RequestParam("file") MultipartFile var1
+    ) {
         final boolean b = this.formSettingLogic.updatePrintTemp(processId, var1);
         return R.state(b);
     }
@@ -232,11 +233,13 @@ public class ProcessFlowRestController {
 
     @PostMapping("/formlink/save")
     public R formLinkSave(
-            @RequestParam(value = "formLink",required = false,defaultValue = "") String formLink,
-            @RequestParam(value = "approveLink",required = false,defaultValue = "") String approveLink,
-            @RequestParam(value = "manualStartFlag",required = false,defaultValue = "1") Integer manualStartFlag,
-            @RequestParam("id") long processId) {
-        final boolean b = this.formSettingLogic.updateFormLink(processId, formLink,approveLink,manualStartFlag);
+            @RequestParam(value = "formLink", required = false, defaultValue = "") String formLink,
+            @RequestParam(value = "approveLink", required = false, defaultValue = "") String approveLink,
+            @RequestParam(value = "manualStartFlag", required = false, defaultValue = "1") Integer manualStartFlag,
+            @RequestParam("id") long processId
+    ) {
+        final boolean b = this.formSettingLogic.updateFormLink(processId, formLink, approveLink,
+                manualStartFlag);
         return R.state(b);
     }
 }
