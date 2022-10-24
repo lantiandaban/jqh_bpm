@@ -1,10 +1,10 @@
 bpm:
-  file-path: /tools/hspharm/uploadFile
+  file-path: E:\Jt-Srm\upload
   ctx: ''
-  target-url: http://218.92.35.106:9888
+  target-url: http://172.16.0.71:8778
   type: 1
-  callback-url: http://192.168.23.165:9888/bill/rest/callback
-  pushmsg-url: http://192.168.23.165:9888/bill/rest/pushmsg
+  callback-url: http://127.0.0.1:8778/bill/rest/callback
+  pushmsg-url: http://127.0.0.1:8778/bill/rest/pushmsg
 spring:
   jackson:
     time-zone: GMT+8
@@ -16,9 +16,9 @@ spring:
       #      url: jdbc:mysql://127.0.0.1:3306/haosen_srm?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
       #      username: root
       #      password: root
-      url: jdbc:mysql://192.168.23.164:3306/haosen_srm?useUnicode=true&characterEncoding=utf-8&useSSL=true&allowMultiQueries=true
+      url: jdbc:mysql://172.16.0.71:3306/jqh_srm_9001?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8
       username: root
-      password: Hs123456
+      password: jqh_srm_123123
       initial-size: 10
       max-active: 20
       min-idle: 2
