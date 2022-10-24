@@ -13,9 +13,9 @@ import com.googlecode.aviator.AviatorEvaluator;
 import com.srm.bpm.infra.entity.ProcessNodeConnectionEntity;
 import com.srm.bpm.infra.service.ProcessNodeConnectionService;
 import com.srm.bpm.logic.constant.BillAction;
-import com.srm.bpm.logic.context.BpmnBillContext;
 import com.srm.bpm.logic.constant.BpmnConst;
 import com.srm.bpm.logic.constant.FastJsonType;
+import com.srm.bpm.logic.context.BpmnBillContext;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.apache.commons.lang3.BooleanUtils;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Objects;
 
-import cn.hutool.core.util.NumberUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -78,6 +77,17 @@ public class LineExpressService {
             log.warn("the node condition express processId is zero! please check!");
             return false;
         }
+        Map<String, Object> tmp = Maps.newHashMap();
+        tmp.putAll(formDataMap);
+        final Map<String, Object> agreeFromData =
+                (Map<String, Object>) execution.getVariable(BpmnConst.VAR_AGREE_DATA);
+        if (!Objects.isNull(agreeFromData)) {
+            for (String s : agreeFromData.keySet()) {
+                if (!Objects.isNull(agreeFromData.get(s))) {
+                    tmp.put(s, agreeFromData.get(s));
+                }
+            }
+        }
         if (!StringUtils.equals(action, BillAction.agree.name())
                 && !StringUtils.equals(action, BillAction.submit.name())) {
             // 不是审批提交和同意的 都走其他连线
@@ -101,16 +111,8 @@ public class LineExpressService {
             BpmnBillContext billContext = JSON.parseObject(proposer, BpmnBillContext.class);
 
             Map<String, Object> env = Maps.newHashMap();
-            for (String key : formDataMap.keySet()) {
-                if (Objects.isNull(formDataMap.get(key))) {
-                    continue;
-                }
-                if (NumberUtil.isNumber(formDataMap.get(key).toString())) {
-                    formDataMap.put(key, NumberUtil.toBigDecimal(formDataMap.get(key).toString()));
-                }
-            }
             if (StringUtils.contains(express, BpmnConst.VAR_FORM_DATA)) {
-                env.put(BpmnConst.VAR_FORM_DATA, formDataMap);
+                env.put(BpmnConst.VAR_FORM_DATA, tmp);
             }
             env.putAll(billContext.toEnvParam(express));
             if (!Strings.isNullOrEmpty(expressParams)) {
