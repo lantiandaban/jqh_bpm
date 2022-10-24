@@ -129,11 +129,11 @@ public class LineExpressService {
                                 "\n ------ proposer: {}" +
                                 "\n ------ approver: {}" +
                                 "\n ------ action: {}" +
-                                "\n ------ formData: {}",
+                                "\n ------ allFormData: {}",
                         processId, nodeId,
                         proposer, approver,
                         action,
-                        JSON.toJSONString(formDataMap));
+                        JSON.toJSONString(tmp));
                 log.debug("The line node {} [{}] parse result is {} \n --- the express is {} " +
                                 "\n --- the express params is {} ",
                         nodeId, "", pass ? "pass" : "no pass", express, expressParams);
