@@ -4,7 +4,7 @@ bpm:
   target-url: http://127.0.0.1:9888
   type: 1
   callback-url: http://127.0.0.1:9888/bill/rest/callback
-  pushmsg-url: http://127.0.0.1:9888/bill/rest/pushmsg
+  pushmsg-url: http://127.0.0.1:9888/task/pushmsg
 spring:
   jackson:
     time-zone: GMT+8

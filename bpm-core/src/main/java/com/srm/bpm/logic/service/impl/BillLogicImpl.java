@@ -798,6 +798,7 @@ public class BillLogicImpl implements BillLogic {
                 taskOpt = billBpmnLogic.findTaskBybillAndEmployeeAndTaskId(billId, taskId, userCode);
                 if (taskOpt.isPresent()) {
                     BillTaskEntity task = taskOpt.get();
+                    task.setOpinion(opinion);
                     final int taskNodeStatus = task.getNodeStatus();
                     BillTaskStatus billTaskStatus = BillTaskStatus.valueTo(taskNodeStatus);
                     switch (billTaskStatus) {
@@ -852,6 +853,13 @@ public class BillLogicImpl implements BillLogic {
                 if (action.equals(BillAction.refuse.name())) {
                     callBackLogic.callBack(byId.getProcessId(), billId, BillTaskStatus.REFUSE.getStatus());
                 } else {
+                	BillTaskEntity a = new BillTaskEntity();
+                	a.setBillId(byId.getId());
+                	a.setUserCode(byId.getSender());
+                	a.setNodeStatus(BillTaskStatus.COMPLATE.getStatus());
+                	a.setNodeName(byId.getTitle());
+                	a.setOpinion("通过");
+                	flowMsgLogic.sendMsg(Lists.newArrayList(a));
                     callBackLogic.callBack(byId.getProcessId(), billId, BillStatus.COMPLETE.getStatus());
                 }
             }

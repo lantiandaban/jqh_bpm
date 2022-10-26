@@ -76,7 +76,9 @@ public enum BillTaskStatus {
     /**
      * 已移交
      */
-    TURN(15);
+    TURN(15),
+    
+    COMPLATE(16);
 
 
     private final int status;
