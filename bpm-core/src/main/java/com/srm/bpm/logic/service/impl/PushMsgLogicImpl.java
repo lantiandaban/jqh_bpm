@@ -13,6 +13,7 @@
 package com.srm.bpm.logic.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class PushMsgLogicImpl implements PushMsgLogic {
 
 	@Override
 	public void push(List<FlowMsgDTO> allMsg) {
+		allMsg = allMsg.stream().filter(e->(e.getPush() != null && !e.getPush().equals(""))).collect(Collectors.toList());
 		JSONObject data = new JSONObject();
 		data.put("msg", JSON.toJSON(allMsg));
 		log.info("回调返回的数据:{}", allMsg);
