@@ -32,14 +32,15 @@ public class ProcessTreeRestController {
 
     @GetMapping("/organization")
     public R organization(String q) {
-        final List<ZTreeDTO> organization = userCenterlogic.organization("",Strings.isNullOrEmpty(q) ? "" : q);
+        final List<ZTreeDTO> organization = userCenterlogic.organization("",Strings.isNullOrEmpty(q) ? "" : q, null);
         return R.ok(organization);
     }
 
     @GetMapping("/organization/user")
     public R organizationUser(String q,
-                              @RequestParam(value = "onlyChoiceUser", required = false) boolean onlyChoiceUser) {
-        return R.ok(userCenterlogic.organizationUser("",q, onlyChoiceUser));
+                              @RequestParam(value = "onlyChoiceUser", required = false) boolean onlyChoiceUser,
+                              @RequestParam(value = "state", required = false) String state) {
+        return R.ok(userCenterlogic.organizationUser("",q, onlyChoiceUser, state));
     }
 
 

@@ -41,7 +41,8 @@ define(function (require, exports, module) {
                 "autoAgreeTitle",
                 "noApprovalOperationTitle",
                 "autoNextHoursTitle",
-                "selectApprovalTitle"];
+                "selectApprovalTitle",
+                "pushTitle"];
             var linkType = this.getNodeSettingByName('linkType');
             if (Foundation.isEmpty(linkType)) {
                 linkType = 'create';
@@ -297,6 +298,12 @@ define(function (require, exports, module) {
                         }]
                     ]
                 },
+                {
+                    xtype: 'title',
+                    title: "推送配置",
+                    id: "pushTitle",
+                },
+                this.__getpushConfig(),
                 "-",
                 {
                     xtype: 'title',
@@ -442,6 +449,67 @@ define(function (require, exports, module) {
                         value: three,
                         onStateChange: (selected) => {
                             stateChange(selected, "3");
+                        }
+                    }]
+                ]
+            }
+        },
+         //推送配置
+        __getpushConfig: function () {
+            var self = this;
+            var tmpValue = self.getNodeSettingByName('push') + "";
+            var email = false;	// 邮件
+            var msg = false;	// 站内信
+            var app = false;	// 小程序
+            if (!Foundation.isEmpty(tmpValue)) {
+                var options = tmpValue.split(",");
+                email = options.indexOf("0") != -1
+                msg = options.indexOf("1") != -1
+                app = options.indexOf("2") != -1
+            }
+
+            function stateChange(selected, r) {
+                var tmpValue = self.getNodeSettingByName('push');
+                if (Foundation.isEmpty(tmpValue) || tmpValue == "undefined") {
+                    if (selected) {
+                        self.setNodeSetting('push', r);
+                    }
+                } else {
+                    var options = tmpValue.split(",");
+                    if (selected) {
+                        options.push(r);
+                    } else {
+                        Foundation.Array.remove(options, r);
+                    }
+                    self.setNodeSetting('push', options.join(","));
+                }
+            }
+
+            return {
+                xtype: "tablecontainer",
+                rowSize: ["auto","auto","auto"],
+                colSize: ["auto"],
+                items: [
+                    [{
+                        xtype: 'checkbox',
+                        text: '推送邮件',
+                        value: email,
+                        onStateChange: (selected) => {
+                            stateChange(selected, "0");
+                        }
+                    }], [{
+                        xtype: 'checkbox',
+                        text: '推送站内信',
+                        value: msg,
+                        onStateChange: (selected) => {
+                            stateChange(selected, "1");
+                        }
+                    }], [{
+                        xtype: 'checkbox',
+                        text: '推送流程中心',
+                        value: app,
+                        onStateChange: (selected) => {
+                            stateChange(selected, "2");
                         }
                     }]
                 ]

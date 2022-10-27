@@ -14,6 +14,9 @@
             <if test="pid!=null and pid!=''">
                 AND org_parent_id=#{pid}
             </if>
+            <if test="state!=null and state!=''">
+                AND state=#{state}
+            </if>
         </where>
     </select>
     <select id="selectUsers" resultType="com.srm.bpmserver.infra.po.UserOrgPO">
@@ -24,6 +27,9 @@
         AND ep.supplier_id is null
         <if test="pid!=null and pid!=''">
             AND so.org_id =#{pid}
+        </if>
+        <if test="state!=null and state != ''">
+            AND ep.deletestatus = 0
         </if>
         ORDER BY ep.create_date DESC
     </select>

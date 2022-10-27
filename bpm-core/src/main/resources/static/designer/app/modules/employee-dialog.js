@@ -57,7 +57,7 @@ define(function (require, exports, module) {
         }
 
         employeeChoiceTree = $treeDom.initZtree({
-            service: g.ctx + 'process/tree/rest/organization/user?onlyChoiceUser=1'
+            service: g.ctx + 'process/tree/rest/organization/user?onlyChoiceUser=1&state=Y'
         }, org_tree_setting);
     };
     /**

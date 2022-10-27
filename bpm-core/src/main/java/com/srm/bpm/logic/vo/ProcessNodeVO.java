@@ -43,6 +43,7 @@ public class ProcessNodeVO implements Serializable {
     private String title;
     private BigDecimal autoNextHours;
     private String autoAgree;
+    private String push;
     private String btns;
     private Integer countersignFlag;
     private Integer batchApproval;

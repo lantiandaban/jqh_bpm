@@ -51,6 +51,11 @@ public class ProcessNodeExtendEntity extends BaseEntity {
      * 自动同意规则(1:处理人就是提交人;2:处理人和上一步处理人相同;3处理人审批过;多个已逗号分隔
      */
     private String autoAgree;
+    
+    /**
+     * 推送配置(0:邮件;1:站内信;2:流程中心;多个以逗号分隔)
+     */
+    private String push;
 
     /**
      * 节点显示的按钮

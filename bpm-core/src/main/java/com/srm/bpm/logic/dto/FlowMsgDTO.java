@@ -32,6 +32,10 @@ public class FlowMsgDTO {
      */
     private String content;
     /**
+     * 推送配置(0:邮件;1:站内信;2:流程中心;多个以逗号分隔)
+     */
+    private String push;
+    /**
      * 节点名称
      */
     private String nodeName;
@@ -43,15 +47,19 @@ public class FlowMsgDTO {
      * 时间
      */
     private LocalDateTime time;
-
-    public static FlowMsgDTO build(String userCode, String createUser, String content, String title, String nodeName, String opinion) {
+    
+    private Long billId;
+    
+    public static FlowMsgDTO build(String userCode, String createUser, String content, String title, String push, String nodeName, String opinion, Long billId) {
         FlowMsgDTO flowMsgDTO = new FlowMsgDTO();
         flowMsgDTO.setCreateUser(createUser);
         flowMsgDTO.setUserCode(userCode);
         flowMsgDTO.setContent(content);
         flowMsgDTO.setBillTitle(title);
+        flowMsgDTO.setPush(push);
         flowMsgDTO.setNodeName(nodeName);
         flowMsgDTO.setOpinion(opinion);
+        flowMsgDTO.setBillId(billId);
         flowMsgDTO.setTime(LocalDateTime.now());
         return flowMsgDTO;
     }

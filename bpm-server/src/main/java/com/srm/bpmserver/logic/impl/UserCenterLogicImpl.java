@@ -50,7 +50,7 @@ public class UserCenterLogicImpl implements UserCenterlogic {
     private final TreeConvert treeConvert;
 
     @Override
-    public List<ZTreeDTO> organization(String pid, String q) {
+    public List<ZTreeDTO> organization(String pid, String q, String state) {
         //查询部门信息
         List<ZTreeDTO> zTreeDTOS = Lists.newArrayList();
         if (Strings.isNullOrEmpty(pid)) {
@@ -62,7 +62,7 @@ public class UserCenterLogicImpl implements UserCenterlogic {
             topLevel.setOpen(true);
             zTreeDTOS.add(topLevel);
         }
-        final List<OrganizationPO> organizationPOS = userCenterDao.selectOrg(pid, q);
+        final List<OrganizationPO> organizationPOS = userCenterDao.selectOrg(pid, q, state);
         for (OrganizationPO organizationPO : organizationPOS) {
             final ZTreeDTO zTreeDTO = treeConvert.organizationPOToDTO(organizationPO);
             zTreeDTO.setData(organizationPO);
@@ -72,13 +72,13 @@ public class UserCenterLogicImpl implements UserCenterlogic {
     }
 
     @Override
-    public List<ZTreeDTO> organizationUser(String pid, String q, boolean onlyChoiceUser) {
-        List<ZTreeDTO> zTreeDTOS = this.organization(pid, q);
+    public List<ZTreeDTO> organizationUser(String pid, String q, boolean onlyChoiceUser, String state) {
+        List<ZTreeDTO> zTreeDTOS = this.organization(pid, q, state);
         for (ZTreeDTO zTreeDTO : zTreeDTOS) {
             zTreeDTO.setNocheck(onlyChoiceUser);
         }
 
-        List<UserOrgPO> userOrgPOS = userCenterDao.selectUsers(pid);
+        List<UserOrgPO> userOrgPOS = userCenterDao.selectUsers(pid, state);
         for (UserOrgPO userOrgPO : userOrgPOS) {
             final ZTreeDTO zTreeDTO = new ZTreeDTO();
             zTreeDTO.setId(userOrgPO.getId());

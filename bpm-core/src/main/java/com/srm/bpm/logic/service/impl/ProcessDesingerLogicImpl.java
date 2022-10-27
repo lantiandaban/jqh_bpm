@@ -207,6 +207,7 @@ public class ProcessDesingerLogicImpl implements ProcessDesingerLogic {
             nodeExtend.setId(nodeExtendId);
             nodeExtend.setNodeId(nodeId);
             nodeExtend.setBtns(nodeSetting.getBtns());
+            nodeExtend.setPush(nodeSetting.getPush());
             nodeExtend.setNodeType(nodeSetting.getNtype());
             nodeExtend.setNodeName(nodeSetting.getTitle());
             nodeExtend.setAutoAgree(nodeSetting.getAutoAgree());
