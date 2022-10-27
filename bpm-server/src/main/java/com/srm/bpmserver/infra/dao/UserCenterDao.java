@@ -26,9 +26,9 @@ import java.util.Set;
  * @since JDK 1.8
  */
 public interface UserCenterDao {
-    List<OrganizationPO> selectOrg(@Param("pid") String pid, @Param("q") String q);
+    List<OrganizationPO> selectOrg(@Param("pid") String pid, @Param("q") String q, @Param("state") String state);
 
-    List<UserOrgPO> selectUsers(@Param("pid") String pid);
+    List<UserOrgPO> selectUsers(@Param("pid") String pid, @Param("state") String state);
 
     List<PositionPO> selectAllPosition(@Param("pid") String pid, @Param("q") String s);
 

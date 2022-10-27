@@ -21,9 +21,9 @@ import cn.hutool.core.lang.Pair;
  * @since JDK 1.8
  */
 public interface UserCenterlogic {
-    List<ZTreeDTO> organization(String pid, String s);
+    List<ZTreeDTO> organization(String pid, String s, String state);
 
-    List<ZTreeDTO> organizationUser(String pid, String q, boolean onlyChoiceUser);
+    List<ZTreeDTO> organizationUser(String pid, String q, boolean onlyChoiceUser, String state);
 
     List<ZTreeDTO> positionUser(String pid);
 
