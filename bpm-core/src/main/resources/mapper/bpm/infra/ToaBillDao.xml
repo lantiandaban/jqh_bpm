@@ -79,7 +79,7 @@
                 AND tb.status = #{query.status}
             </if>
         </if>
-        ORDER BY approver.dateline desc, tb.start_time DESC
+        ORDER BY tb.start_time DESC
     </select>
     <select id="selectTodoByStatus" resultType="com.srm.bpm.infra.po.BillItemPO">
         SELECT tb.id, tb.code, tb.title, tb.completion_time, tb.start_time, tb.priority, tb.status,
@@ -122,7 +122,7 @@
             </if>
 
         </if>
-        ORDER BY brr.read_time, tb.start_time DESC
+        ORDER BY tb.start_time DESC
     </select>
     <select id="selectCreateByEmployee" resultType="com.srm.bpm.infra.po.BillItemPO">
         SELECT tb.id, tb.code, tb.title, tb.completion_time, tb.start_time, tb.priority, tb.status,
@@ -178,7 +178,7 @@
                 AND tb.process_id = #{query.processId}
             </if>
         </if>
-        ORDER BY tb.creation_time DESC
+        ORDER BY tb.start_time DESC
     </select>
     <select id="selectCc" resultType="com.srm.bpm.infra.po.BillItemPO">
         SELECT tb.id, tb.code, tb.title, tb.completion_time, tb.start_time, tb.attachment_flag,tb.print_size,
@@ -208,7 +208,7 @@
                 AND tb.status = #{query.status}
             </if>
         </if>
-        ORDER BY bcp.dateline desc
+        ORDER BY tb.start_time desc
     </select>
     <select id="selectTodoSizeByStatus" resultType="java.lang.String">
         SELECT count(tb.id)
@@ -226,7 +226,7 @@
         <foreach collection="statusList" item="status" separator="," open="(" close=")">
             #{status}
         </foreach>
-        ORDER BY brr.read_time, tb.start_time DESC
+        ORDER BY tb.start_time DESC
     </select>
     <select id="selectAllByQuery" resultType="com.srm.bpm.infra.po.BillItemPO">
         SELECT tb.id, tb.code, tb.title, tb.completion_time, tb.start_time, tb.attachment_flag,
