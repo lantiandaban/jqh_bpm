@@ -199,7 +199,8 @@ public class BillLogicImpl implements BillLogic {
         final List<BillOpinionVO> opinionVOS = Lists.newArrayList();
         String firstNodeId = StringPool.EMPTY;
 
-        final List<ProcessNodeExtendEntity> taskNodes = nodeExtendService.findTaskNodeByProcess(processId);
+        final List<ProcessNodeExtendEntity> taskNodes =
+                nodeExtendService.findTaskNodeByProcess(processId);
         if (CollectionUtil.isNotEmpty(taskNodes)) {
             for (ProcessNodeExtendEntity taskNode : taskNodes) {
                 final String linkType = taskNode.getLinkType();
@@ -214,14 +215,17 @@ public class BillLogicImpl implements BillLogic {
             }
         }
         // 获取授权信息
-        final List<FormPermissionVO> permissionVOS =
-                formBasicConvert.formPermissionPOtoVO(nodeFieldPermission.nodeFieldPermission(processId, firstNodeId));
+        final List<FormPermissionVO> permissionVOS = formBasicConvert.formPermissionPOtoVO(
+                nodeFieldPermission.nodeFieldPermission(processId, firstNodeId));
         // 获取标题字段
         final ToaProcessEntity byId = processService.getById(processId);
-        final String code = DateTimeUtil.format(LocalDateTime.now(), "yyyyMMddHHmm") + RandomUtil.randomNumbers(6);
+        final String code =
+                DateTimeUtil.format(LocalDateTime.now(), "yyyyMMddHHmm") + RandomUtil.randomNumbers(
+                        6);
         // 获取标题字段
 
-        final UserInfoDTO userInfoByCode = userCenterlogic.getUserInfoByCode(loginUserHolder.getUserCode());
+        final UserInfoDTO userInfoByCode =
+                userCenterlogic.getUserInfoByCode(loginUserHolder.getUserCode());
         final String title = billTitleLogic.getTitle(processId, userInfoByCode.getNickname());
         final Map<String, Object> formData = bizFormData(process, userInfoByCode, title);
         // 按钮控制
@@ -251,8 +255,9 @@ public class BillLogicImpl implements BillLogic {
         if (bill == null) {
             throw new RbException(StringPool.EMPTY, BillCode.BILL_NOT_FOUND);
         }
-        final BillDataJsonEntity billDataJson =
-                billDataJsonService.getOne(Wrappers.lambdaQuery(BillDataJsonEntity.class).eq(BillDataJsonEntity::getBillId, billId));
+        final BillDataJsonEntity billDataJson = billDataJsonService.getOne(
+                Wrappers.lambdaQuery(BillDataJsonEntity.class)
+                        .eq(BillDataJsonEntity::getBillId, billId));
         if (null == billDataJson) {
             throw new RbException(StringPool.EMPTY, BillCode.BILL_NOT_FOUND);
         }
@@ -270,17 +275,28 @@ public class BillLogicImpl implements BillLogic {
         detailBuilder.selfTaskNames(getSelfNodeName(billId, loginUserHolder.getUserCode(), page));
         final List<BillOpinionVO> opinionVOS = billOpinions(bill);
         final String formSchema = billDataJson.getFormSchema();
-        return detailBuilder.form(formSchema).opinions(opinionVOS).title(bill.getTitle()).code(bill.getCode()).mode("edit").build();
+        return detailBuilder.form(formSchema)
+                .opinions(opinionVOS)
+                .title(bill.getTitle())
+                .code(bill.getCode())
+                .mode("edit")
+                .build();
     }
 
     private Set<String> getSelfNodeName(long billId, String user, String page) {
         if (page.equals("view")) {
-            List<BillTaskEntity> billTaskEntities = billTaskService.findApprovedByBillAndUser(billId, user);
-            final Set<String> nodeNames = billTaskEntities.stream().map(BillTaskEntity::getNodeName).collect(Collectors.toSet());
+            List<BillTaskEntity> billTaskEntities =
+                    billTaskService.findApprovedByBillAndUser(billId, user);
+            final Set<String> nodeNames = billTaskEntities.stream()
+                    .map(BillTaskEntity::getNodeName)
+                    .collect(Collectors.toSet());
             return nodeNames;
         } else {
-            List<BillTaskEntity> billTaskEntities = billTaskService.findApprovingByBillAndUser(billId, user);
-            final Set<String> nodeNames = billTaskEntities.stream().map(BillTaskEntity::getNodeName).collect(Collectors.toSet());
+            List<BillTaskEntity> billTaskEntities =
+                    billTaskService.findApprovingByBillAndUser(billId, user);
+            final Set<String> nodeNames = billTaskEntities.stream()
+                    .map(BillTaskEntity::getNodeName)
+                    .collect(Collectors.toSet());
             return nodeNames;
         }
     }
@@ -294,7 +310,9 @@ public class BillLogicImpl implements BillLogic {
         if (bill == null) {
             throw new RbException(StringPool.EMPTY, BillCode.BILL_NOT_FOUND);
         }
-        final BillDataJsonEntity billDataJson = billDataJsonService.getOne(Wrappers.lambdaQuery(BillDataJsonEntity.class).eq(BillDataJsonEntity::getBillId, billId));
+        final BillDataJsonEntity billDataJson = billDataJsonService.getOne(
+                Wrappers.lambdaQuery(BillDataJsonEntity.class)
+                        .eq(BillDataJsonEntity::getBillId, billId));
         if (null == billDataJson) {
             throw new RbException(StringPool.EMPTY, BillCode.BILL_NOT_FOUND);
         }
@@ -312,7 +330,11 @@ public class BillLogicImpl implements BillLogic {
         detailBuilder.selfTaskNames(getSelfNodeName(billId, loginUserHolder.getUserCode(), page));
         final List<BillOpinionVO> opinionVOS = billOpinions(bill);
         final String formSchema = billDataJson.getFormSchema();
-        return detailBuilder.form(formSchema).code(bill.getCode()).opinions(opinionVOS).mode("view").build();
+        return detailBuilder.form(formSchema)
+                .code(bill.getCode())
+                .opinions(opinionVOS)
+                .mode("view")
+                .build();
     }
 
     /**
@@ -331,8 +353,8 @@ public class BillLogicImpl implements BillLogic {
         final String userCode = loginUserHolder.getUserCode();
         // 不是自己发起的，记录读取
         final String sender = bill.getSender();
-        return sender.equals(userCode)
-                || billReadRecordService.readBillByUserCode(billId, userCode);
+        return sender.equals(userCode) || billReadRecordService.readBillByUserCode(billId,
+                userCode);
     }
 
     /**
@@ -347,7 +369,8 @@ public class BillLogicImpl implements BillLogic {
     public BillItemVO saveDrafts(long processId, long billId, String formDataJson) {
         Preconditions.checkNotNull(formDataJson);
         final ProcessDetailPO processDetail = this.processService.findDetailById(processId);
-        final Map<String, Object> dataMap = JSON.parseObject(formDataJson, FastJsonType.MAP_OBJECT_TR);
+        final Map<String, Object> dataMap =
+                JSON.parseObject(formDataJson, FastJsonType.MAP_OBJECT_TR);
         final BillDataContext billDataValue;
         billDataValue = this.resolveFormData(billId, processDetail, dataMap);
         final ToaBillEntity bill;
@@ -384,7 +407,9 @@ public class BillLogicImpl implements BillLogic {
      * @return 数据和总数
      */
     @Override
-    public Pair<List<BillItemVO>, Long> findApproved(Integer pageNo, Integer pageSize, ApprovedBillQuery query) {
+    public Pair<List<BillItemVO>, Long> findApproved(
+            Integer pageNo, Integer pageSize, ApprovedBillQuery query
+    ) {
         Page page = new Page<>(pageNo, pageSize);
         final List<BillItemPO> billItemDtos;
         final String userCode = loginUserHolder.getUserCode();
@@ -402,13 +427,15 @@ public class BillLogicImpl implements BillLogic {
      * @return 数据和总数
      */
     @Override
-    public Pair<List<BillItemVO>, Long> findTodo(Integer pageNo, Integer pageSize, TodoBillQuery query) {
+    public Pair<List<BillItemVO>, Long> findTodo(
+            Integer pageNo, Integer pageSize, TodoBillQuery query
+    ) {
         Page page = new Page(pageNo, pageSize);
-        List<Integer> statusList = Lists.newArrayList(
-                BillStatus.APPROVAL.getStatus(), BillStatus.REFUSE.getStatus()
-        );
+        List<Integer> statusList =
+                Lists.newArrayList(BillStatus.APPROVAL.getStatus(), BillStatus.REFUSE.getStatus());
         final String userCode = loginUserHolder.getUserCode();
-        final List<BillItemPO> billDatas = this.billService.findTodoByStatus(page, userCode, query, statusList);
+        final List<BillItemPO> billDatas =
+                this.billService.findTodoByStatus(page, userCode, query, statusList);
         final Page<BillItemVO> billItemVOPage = toItemVOList(page, billDatas, userCode);
         return Pair.of(billItemVOPage.getRecords(), billItemVOPage.getTotal());
     }
@@ -422,10 +449,13 @@ public class BillLogicImpl implements BillLogic {
      * @return 数据和总数
      */
     @Override
-    public Pair<List<BillItemVO>, Long> findMeCreate(Integer pageNo, Integer pageSize, MeCreateBillQuery query) {
+    public Pair<List<BillItemVO>, Long> findMeCreate(
+            Integer pageNo, Integer pageSize, MeCreateBillQuery query
+    ) {
         Page page = new Page(pageNo, pageSize);
         final String userCode = loginUserHolder.getUserCode();
-        final List<BillItemPO> billDatas = this.billService.findCreateByEmployee(page, userCode, query);
+        final List<BillItemPO> billDatas =
+                this.billService.findCreateByEmployee(page, userCode, query);
         final Page<BillItemVO> billItemVOPage = toItemVOList(page, billDatas, userCode);
         return Pair.of(billItemVOPage.getRecords(), billItemVOPage.getTotal());
     }
@@ -439,10 +469,13 @@ public class BillLogicImpl implements BillLogic {
      * @return 数据和总数
      */
     @Override
-    public Pair<List<BillItemVO>, Long> findDraft(Integer pageNo, Integer pageSize, DraftBillQuery query) {
+    public Pair<List<BillItemVO>, Long> findDraft(
+            Integer pageNo, Integer pageSize, DraftBillQuery query
+    ) {
         Page page = new Page(pageNo, pageSize);
         final String userCode = loginUserHolder.getUserCode();
-        final List<BillItemPO> billDatas = this.billService.findDraftsBySender(page, userCode, query);
+        final List<BillItemPO> billDatas =
+                this.billService.findDraftsBySender(page, userCode, query);
         final Page<BillItemVO> billItemVOPage = toItemVOList(page, billDatas, userCode);
         return Pair.of(billItemVOPage.getRecords(), billItemVOPage.getTotal());
     }
@@ -456,7 +489,9 @@ public class BillLogicImpl implements BillLogic {
      * @return 数据和总数
      */
     @Override
-    public Pair<List<BillItemVO>, Long> findCc(Integer pageNo, Integer pageSize, CcBillQuery query) {
+    public Pair<List<BillItemVO>, Long> findCc(
+            Integer pageNo, Integer pageSize, CcBillQuery query
+    ) {
         Page page = new Page(pageNo, pageSize);
         final String userCode = loginUserHolder.getUserCode();
         final List<BillItemPO> cc = this.billService.findCc(page, userCode, query);
@@ -474,11 +509,13 @@ public class BillLogicImpl implements BillLogic {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public BillItemVO startFlow(long processId, long billId, String formDataJson,
-                                String nextApprover, String billCode) {
+    public BillItemVO startFlow(
+            long processId, long billId, String formDataJson, String nextApprover, String billCode
+    ) {
         Preconditions.checkNotNull(formDataJson);
         final ProcessDetailPO processDetail = processService.findDetailById(processId);
-        final Map<String, Object> dataMap = JSON.parseObject(formDataJson, FastJsonType.MAP_OBJECT_TR);
+        final Map<String, Object> dataMap =
+                JSON.parseObject(formDataJson, FastJsonType.MAP_OBJECT_TR);
         final String userCode = loginUserHolder.getUserCode();
         final UserInfoDTO userInfoDTO = userCenterlogic.getUserInfoByCode(userCode);
         final BillDataContext billDataValue;
@@ -526,9 +563,9 @@ public class BillLogicImpl implements BillLogic {
             } else {
                 bill.setTitle(title);
             }
-            if (!Strings.isNullOrEmpty(code)) {
+            if (!Strings.isNullOrEmpty(code) && Strings.isNullOrEmpty(bill.getCode())) {
                 bill.setCode(code);
-            } else {
+            } else if (Strings.isNullOrEmpty(bill.getCode())) {
                 // 生成默认流水号
                 final String billCodeText = serialNumberLogic.dayPolling("bill_default_sn", 6);
                 String codeText = StrUtil.format("{}", billCodeText);
@@ -546,11 +583,12 @@ public class BillLogicImpl implements BillLogic {
                     //找到审批中的节点，然后把排序前移
                     final BillTaskEntity byId = billTaskService.getById(sourceTaskId);
                     final String taskId = byId.getTaskId();
-                    final List<BillTaskEntity> approvingByBillAndTaskId = billTaskService.findApprovingByBillAndTaskId(billId, taskId);
+                    final List<BillTaskEntity> approvingByBillAndTaskId =
+                            billTaskService.findApprovingByBillAndTaskId(billId, taskId);
                     for (BillTaskEntity billTaskEntity : approvingByBillAndTaskId) {
                         billTaskEntity.setSort(DateTimeUtil.timeMills());
                     }
-//                    approvingByBillAndTaskId.add(createTaskByBill);
+                    //                    approvingByBillAndTaskId.add(createTaskByBill);
                     byId.setId(null);
                     byId.setOpinion(null);
                     byId.setNodeStatus(BillTaskStatus.APPROVAL.getStatus());
@@ -571,7 +609,8 @@ public class BillLogicImpl implements BillLogic {
         }
         // 先发起流程
         final Optional<ProcessInstance> processInstanceOpt;
-        processInstanceOpt = billBpmnLogic.startFlow(billDataValue, processDetail, userInfoDTO, nextApprover);
+        processInstanceOpt =
+                billBpmnLogic.startFlow(billDataValue, processDetail, userInfoDTO, nextApprover);
         if (processInstanceOpt.isPresent()) {
             final ProcessInstance processInstance = processInstanceOpt.get();
             final boolean state;
@@ -603,7 +642,7 @@ public class BillLogicImpl implements BillLogic {
                         bill.setStatus(BillStatus.APPROVAL.getStatus());
                         state = billService.updateById(bill);
                         // 取得审批任务信息进行更新
-//                        billTaskService.updateByReFullIn(billId, userInfoDTO.getCode());
+                        //                        billTaskService.updateByReFullIn(billId, userInfoDTO.getCode());
                         break;
                     }
                     default:
@@ -622,7 +661,9 @@ public class BillLogicImpl implements BillLogic {
         }
     }
 
-    private ValidationResultDTO validationBySubmitFlow(ProcessDetailPO processDetail, BillDataContext billDataValue, String userCode) {
+    private ValidationResultDTO validationBySubmitFlow(
+            ProcessDetailPO processDetail, BillDataContext billDataValue, String userCode
+    ) {
         final BillValidationLogic validationService = getValidationService(processDetail.getId());
         return validataionWithResult(billDataValue, userCode, validationService);
     }
@@ -635,15 +676,18 @@ public class BillLogicImpl implements BillLogic {
      * @return 审批单
      */
     @Override
-    public BillItemVO sendProcess(long billId, long processId,
-                                  String nextApprover) {
+    public BillItemVO sendProcess(
+            long billId, long processId, String nextApprover
+    ) {
         final ToaBillEntity bill = billService.getById(billId);
         if (bill == null) {
             throw new RbException(BillCode.BILL_NOT_FOUND);
         }
         //  去掉草稿箱的判断，通过具体执行函数来判断
 
-        final BillDataJsonEntity billDataJson = billDataJsonService.getOne(Wrappers.lambdaQuery(BillDataJsonEntity.class).eq(BillDataJsonEntity::getBillId, billId));
+        final BillDataJsonEntity billDataJson = billDataJsonService.getOne(
+                Wrappers.lambdaQuery(BillDataJsonEntity.class)
+                        .eq(BillDataJsonEntity::getBillId, billId));
         final String formData = billDataJson.getFormData();
         return this.startFlow(processId, billId, formData, nextApprover, StrUtil.EMPTY);
     }
@@ -674,7 +718,8 @@ public class BillLogicImpl implements BillLogic {
                 eventBus.post(billAgreeEvent);
             case APPROVAL: {
                 final Optional<BillTaskEntity> taskOpt;
-                taskOpt = billBpmnLogic.findTaskBybillAndEmployeeAndTaskId(billId, taskId, userCode);
+                taskOpt =
+                        billBpmnLogic.findTaskBybillAndEmployeeAndTaskId(billId, taskId, userCode);
                 if (taskOpt.isPresent()) {
                     BillTaskEntity billTask = taskOpt.get();
                     billTask.setOpinion(opinion);
@@ -692,14 +737,21 @@ public class BillLogicImpl implements BillLogic {
                                     final boolean goFlag = agreeIsGoOn(billTask);
                                     flowMsgLogic.sendMsg(Lists.newArrayList(billTask));
                                     if (goFlag) {
-                                        this.billTaskService.agreeTask(billTask, userCode, actionParam);
-                                        this.billItemLogic.updateByFormDataByBill(billId, actionParam.getFormData());
+                                        this.billTaskService.agreeTask(billTask, userCode,
+                                                actionParam);
+                                        this.billItemLogic.updateByFormDataByBill(billId,
+                                                actionParam.getFormData());
                                         //删除待审批的信息
-                                        this.billTaskService.deleteApproval(billTask.getBillId(), billTask.getTaskId(), BillTaskStatus.APPROVAL.getStatus());
-                                        this.billBpmnLogic.complete(bill, taskId, opinion, userCode, nextApprover, actionParam.getFormData(), billTask.getTaskNodeKey(), billTask.getTaskId());
+                                        this.billTaskService.deleteApproval(billTask.getBillId(),
+                                                billTask.getTaskId(),
+                                                BillTaskStatus.APPROVAL.getStatus());
+                                        this.billBpmnLogic.complete(bill, taskId, opinion, userCode,
+                                                nextApprover, actionParam.getFormData(),
+                                                billTask.getTaskNodeKey(), billTask.getTaskId());
 
                                     } else {
-                                        this.billTaskService.agreeTask(billTask, userCode, actionParam);
+                                        this.billTaskService.agreeTask(billTask, userCode,
+                                                actionParam);
                                     }
                                     break;
                                 case AGREE:
@@ -713,12 +765,17 @@ public class BillLogicImpl implements BillLogic {
                             switch (billTaskStatus) {
                                 case APPROVAL:
                                     //加签处理，需要把当前审批人在当前节点的所有加签任务都审批通过
-                                    List<BillTaskEntity> billTaskEntities = billTaskService.findEndorseByUserAndTaskId(billId, taskId, userCode);
+                                    List<BillTaskEntity> billTaskEntities =
+                                            billTaskService.findEndorseByUserAndTaskId(billId,
+                                                    taskId, userCode);
                                     List<BillTaskEntity> updates = Lists.newArrayList();
                                     List<BillTaskEntity> inserts = Lists.newArrayList();
                                     for (BillTaskEntity billTaskEntity : billTaskEntities) {
-                                        final BillTaskEntity newBillTask = BeanUtil.sourceToTarget(billTask, BillTaskEntity.class);
-                                        billTaskEntity.setNodeStatus(BillTaskStatus.AGREE.getStatus());
+                                        final BillTaskEntity newBillTask =
+                                                BeanUtil.sourceToTarget(billTask,
+                                                        BillTaskEntity.class);
+                                        billTaskEntity.setNodeStatus(
+                                                BillTaskStatus.AGREE.getStatus());
                                         billTaskEntity.setDateline(DateTimeUtil.unixTime());
                                         billTaskEntity.setUpdateTime(LocalDateTime.now());
                                         billTaskEntity.setOpinion(actionParam.getOpinion());
@@ -787,15 +844,16 @@ public class BillLogicImpl implements BillLogic {
         final int status = MoreObjects.firstNonNull(bill.getStatus(), 0);
         BillStatus billStatus = BillStatus.valueTo(status);
         switch (billStatus) {
-//            case REFUSE:
-//                //当前审批单是拒绝状态才会走这里
-//                BillRefuseEvent billAgreeEvent = new BillRefuseEvent();
-//                billAgreeEvent.setBillId(billId);
-//                billAgreeEvent.setProcessId(bill.getProcessId());
-//                eventBus.post(billAgreeEvent);
+            //            case REFUSE:
+            //                //当前审批单是拒绝状态才会走这里
+            //                BillRefuseEvent billAgreeEvent = new BillRefuseEvent();
+            //                billAgreeEvent.setBillId(billId);
+            //                billAgreeEvent.setProcessId(bill.getProcessId());
+            //                eventBus.post(billAgreeEvent);
             case APPROVAL: {
                 final Optional<BillTaskEntity> taskOpt;
-                taskOpt = billBpmnLogic.findTaskBybillAndEmployeeAndTaskId(billId, taskId, userCode);
+                taskOpt =
+                        billBpmnLogic.findTaskBybillAndEmployeeAndTaskId(billId, taskId, userCode);
                 if (taskOpt.isPresent()) {
                     BillTaskEntity task = taskOpt.get();
                     final int taskNodeStatus = task.getNodeStatus();
@@ -805,10 +863,13 @@ public class BillLogicImpl implements BillLogic {
                             refuseApproval(taskId, opinion, bill, userCode, task);
                             // 更新提交的formdata
                             final String formData = actionParam.getFormData();
-                            if (!Strings.isNullOrEmpty(formData) && !org.apache.commons.lang3.StringUtils.equals("{}", formData)) {
+                            if (!Strings.isNullOrEmpty(
+                                    formData) && !org.apache.commons.lang3.StringUtils.equals("{}",
+                                    formData)) {
                                 this.billItemLogic.updateByFormDataByBill(billId, formData);
                             }
-                            billTaskService.deleteApproval(task.getBillId(), task.getTaskId(), BillTaskStatus.APPROVAL.getStatus());
+                            billTaskService.deleteApproval(task.getBillId(), task.getTaskId(),
+                                    BillTaskStatus.APPROVAL.getStatus());
                             break;
                         case AGREE:
                         case REFUSE:
@@ -850,16 +911,18 @@ public class BillLogicImpl implements BillLogic {
                 final ToaBillEntity byId = billService.getById(billId);
                 billService.upldate(bill);
                 if (action.equals(BillAction.refuse.name())) {
-                    callBackLogic.callBack(byId.getProcessId(), billId, BillTaskStatus.REFUSE.getStatus());
+                    callBackLogic.callBack(byId.getProcessId(), billId,
+                            BillTaskStatus.REFUSE.getStatus());
                 } else {
-                	BillTaskEntity a = new BillTaskEntity();
-                	a.setBillId(byId.getId());
-                	a.setUserCode(byId.getSender());
-                	a.setNodeStatus(BillTaskStatus.COMPLATE.getStatus());
-                	a.setNodeName(byId.getTitle());
-                	a.setOpinion("通过");
-                	flowMsgLogic.sendMsg(Lists.newArrayList(a));
-                    callBackLogic.callBack(byId.getProcessId(), billId, BillStatus.COMPLETE.getStatus());
+                    BillTaskEntity a = new BillTaskEntity();
+                    a.setBillId(byId.getId());
+                    a.setUserCode(byId.getSender());
+                    a.setNodeStatus(BillTaskStatus.COMPLATE.getStatus());
+                    a.setNodeName(byId.getTitle());
+                    a.setOpinion("通过");
+                    flowMsgLogic.sendMsg(Lists.newArrayList(a));
+                    callBackLogic.callBack(byId.getProcessId(), billId,
+                            BillStatus.COMPLETE.getStatus());
                 }
             }
         };
@@ -879,15 +942,20 @@ public class BillLogicImpl implements BillLogic {
             throw new RbException(BillCode.BILL_NOT_FOUND);
         }
         final List<BillApprovalHistoryPO> byBill = billTaskService.findByBill(bill);
-        final Set<String> userCodes = byBill.stream().map(BillApprovalHistoryPO::getUserCode).collect(Collectors.toSet());
-        final Set<String> userCodes1 = byBill.stream().map(BillApprovalHistoryPO::getSourceUserCode).collect(Collectors.toSet());
-        final Set<String> userCodes2 = byBill.stream().map(BillApprovalHistoryPO::getTargetUserCode).collect(Collectors.toSet());
+        final Set<String> userCodes =
+                byBill.stream().map(BillApprovalHistoryPO::getUserCode).collect(Collectors.toSet());
+        final Set<String> userCodes1 = byBill.stream()
+                .map(BillApprovalHistoryPO::getSourceUserCode)
+                .collect(Collectors.toSet());
+        final Set<String> userCodes2 = byBill.stream()
+                .map(BillApprovalHistoryPO::getTargetUserCode)
+                .collect(Collectors.toSet());
         userCodes.addAll(userCodes1);
         userCodes.addAll(userCodes2);
         final List<UserInfoDTO> userInfoDTOS = userCenterlogic.getUserByCodes(userCodes);
         if (CollectionUtil.isNotEmpty(userInfoDTOS)) {
-            final Map<String, String> codeNameMap =
-                    userInfoDTOS.stream().collect(Collectors.toMap(UserInfoDTO::getCode, UserInfoDTO::getNickname));
+            final Map<String, String> codeNameMap = userInfoDTOS.stream()
+                    .collect(Collectors.toMap(UserInfoDTO::getCode, UserInfoDTO::getNickname));
             for (BillApprovalHistoryPO billApprovalHistoryPO : byBill) {
                 final String userCode = billApprovalHistoryPO.getUserCode();
                 final String name = codeNameMap.get(userCode);
@@ -900,19 +968,21 @@ public class BillLogicImpl implements BillLogic {
                 if (!Strings.isNullOrEmpty(targetUserCode)) {
                     billApprovalHistoryPO.setTargetUserName(codeNameMap.get(targetUserCode));
                 }
-                if (billApprovalHistoryPO.getTaskType().compareTo(BillTaskType.SKIP.getValue()) == 0) {
+                if (billApprovalHistoryPO.getTaskType()
+                        .compareTo(BillTaskType.SKIP.getValue()) == 0) {
                     billApprovalHistoryPO.setUserName(Const.SKIP_OPTION);
                 }
             }
         }
-        final List<BillApprovalHistoryPO> result =
-                byBill.stream().sorted(Comparator.comparing(BillApprovalHistoryPO::getSort, (x, y) -> {
+        final List<BillApprovalHistoryPO> result = byBill.stream()
+                .sorted(Comparator.comparing(BillApprovalHistoryPO::getSort, (x, y) -> {
                     if (x <= y) {
                         return -1;
                     } else {
                         return 1;
                     }
-                })).collect(Collectors.toList());
+                }))
+                .collect(Collectors.toList());
         return billBasicConvert.billApprovalHistoryPOToVO(result);
     }
 
@@ -939,7 +1009,9 @@ public class BillLogicImpl implements BillLogic {
         billBpmnLogic.recall(bill, taskId, opinion, userCode);
     }
 
-    private void refuseApproval(String taskId, String opinion, ToaBillEntity bill, String userCode, BillTaskEntity task) {
+    private void refuseApproval(
+            String taskId, String opinion, ToaBillEntity bill, String userCode, BillTaskEntity task
+    ) {
         final Optional<ProcessNodeExtendEntity> nodeExtendOpt;
         final Long processId = bill.getProcessId();
         final String taskNodeKey = task.getTaskNodeKey();
@@ -962,14 +1034,14 @@ public class BillLogicImpl implements BillLogic {
                     task.setOpinion(opinion);
                     task.setDateline(dateline);
                     task.setAction(BillAction.refuse.name());
-//                    bill.setStatus(BillStatus.REFUSE.getStatus());
-//                    bill.setUpdateTime(LocalDateTime.now());
+                    //                    bill.setStatus(BillStatus.REFUSE.getStatus());
+                    //                    bill.setUpdateTime(LocalDateTime.now());
                     //推送消息
                     List<BillTaskEntity> sends = Lists.newArrayList();
                     sends.add(task);
                     flowMsgLogic.sendMsg(sends);
                     billTaskService.updateById(task);
-//                    billService.updateById(bill);
+                    //                    billService.updateById(bill);
                     billReadRecordService.deleteByBillAndEmployeeId(bill.getId(), userCode);
                     billBpmnLogic.refuse(bill, taskId, opinion, userCode);
                     break;
@@ -987,7 +1059,8 @@ public class BillLogicImpl implements BillLogic {
         final String taskId = billTask.getTaskId();
         final Long billId = billTask.getBillId();
         final Long approverId = billTask.getNodeApproverId();
-        final ProcessNodeApproverEntity nodeApprover = nodeApproverService.getByIdExludDel(approverId);
+        final ProcessNodeApproverEntity nodeApprover =
+                nodeApproverService.getByIdExludDel(approverId);
         if (Objects.isNull(nodeApprover)) {
             //默认全部审批通过才能往下走
             final int percentage = 100;
@@ -995,7 +1068,8 @@ public class BillLogicImpl implements BillLogic {
             int total = billTaskService.findTotalCount(billId, taskId, billTask.getTaskType());
             final BigDecimal val1 = BigDecimal.valueOf(countActive + 1);
             final BigDecimal val2 = BigDecimal.valueOf(total);
-            final BigDecimal val3 = val1.divide(val2, 4, BigDecimal.ROUND_DOWN).multiply(BigDecimal.valueOf(100));
+            final BigDecimal val3 =
+                    val1.divide(val2, 4, BigDecimal.ROUND_DOWN).multiply(BigDecimal.valueOf(100));
             final BigDecimal val4 = BigDecimal.valueOf(percentage);
             return val3.compareTo(val4) >= 0 ? true : false;
         }
@@ -1018,7 +1092,8 @@ public class BillLogicImpl implements BillLogic {
             int total = billTaskService.findTotalCount(billId, taskId, billTask.getTaskType());
             final BigDecimal val1 = BigDecimal.valueOf(countActive + 1);
             final BigDecimal val2 = BigDecimal.valueOf(total);
-            final BigDecimal val3 = val1.divide(val2, 4, BigDecimal.ROUND_DOWN).multiply(BigDecimal.valueOf(100));
+            final BigDecimal val3 =
+                    val1.divide(val2, 4, BigDecimal.ROUND_DOWN).multiply(BigDecimal.valueOf(100));
             final BigDecimal val4 = BigDecimal.valueOf(percentage);
             return val3.compareTo(val4) >= 0 ? true : false;
         }
@@ -1032,7 +1107,8 @@ public class BillLogicImpl implements BillLogic {
             final Set<String> userCodes =
                     billDatas.stream().map(BillItemPO::getSender).collect(Collectors.toSet());
             final List<UserInfoDTO> userInfoDTOS = userCenterlogic.getUserByCodes(userCodes);
-            final Map<String, String> codeNameMap = userInfoDTOS.stream().collect(Collectors.toMap(UserInfoDTO::getCode, a -> a.getNickname()));
+            final Map<String, String> codeNameMap = userInfoDTOS.stream()
+                    .collect(Collectors.toMap(UserInfoDTO::getCode, a -> a.getNickname()));
             if (CollectionUtil.isNotEmpty(userInfoDTOS)) {
                 for (BillItemPO billData : billDatas) {
                     final String sender = billData.getSender();
@@ -1052,7 +1128,10 @@ public class BillLogicImpl implements BillLogic {
         return resultPage;
     }
 
-    private ToaBillEntity createBill(ProcessDetailPO processDetail, BillStatus billStatus, BillDataContext billDataValue, UserInfoDTO userInfoDTO) {
+    private ToaBillEntity createBill(
+            ProcessDetailPO processDetail, BillStatus billStatus, BillDataContext billDataValue,
+            UserInfoDTO userInfoDTO
+    ) {
         ToaBillEntity bill = new ToaBillEntity();
         bill.setId(billDataValue.getId());
         bill.setProcessId(processDetail.getId());
@@ -1082,7 +1161,7 @@ public class BillLogicImpl implements BillLogic {
             final String username = userInfoDTO.getNickname();
             // 生成默认流水号
             final String billCode = serialNumberLogic.dayPolling("bill_default_sn", 6);
-//            String codeText = StrUtil.format("{}-{}-{}-{}", processName, username, day, billCode);
+            //            String codeText = StrUtil.format("{}-{}-{}-{}", processName, username, day, billCode);
             String codeText = StrUtil.format("{}", billCode);
             bill.setCode(codeText);
         } else {
@@ -1102,7 +1181,9 @@ public class BillLogicImpl implements BillLogic {
      * @return 解析后的表单数据
      */
     @Override
-    public BillDataContext resolveFormData(long billId, ProcessDetailPO processDetail, Map<String, Object> formDataMap) {
+    public BillDataContext resolveFormData(
+            long billId, ProcessDetailPO processDetail, Map<String, Object> formDataMap
+    ) {
 
         long processId = processDetail.getId();
 
@@ -1142,7 +1223,8 @@ public class BillLogicImpl implements BillLogic {
             switch (formXtype) {
                 case triggerselect: {
                     final Pair<List<BillAssociatedVO>, List<BillBizDataEntity>> selectVal;
-                    selectVal = billItemLogic.formTriggerselectValue(formDataMap, formFieldVO, newBillId);
+                    selectVal = billItemLogic.formTriggerselectValue(formDataMap, formFieldVO,
+                            newBillId);
                     associateds.addAll(selectVal.getKey());
                     bizDataList.addAll(selectVal.getValue());
                     break;
@@ -1183,8 +1265,10 @@ public class BillLogicImpl implements BillLogic {
                         continue;
                     }
 
-                    final Triple<Boolean, List<BillAssociatedVO>, List<BillBizDataEntity>> detailItemTriple;
-                    detailItemTriple = billItemLogic.detailFormFileds(newBillId, detailgroupDatas, detailFields);
+                    final Triple<Boolean, List<BillAssociatedVO>, List<BillBizDataEntity>>
+                            detailItemTriple;
+                    detailItemTriple = billItemLogic.detailFormFileds(newBillId, detailgroupDatas,
+                            detailFields);
                     final Boolean attachment = detailItemTriple.getLeft();
                     if (attachment) {
                         dataValueBuilder.attachment(true);
@@ -1222,8 +1306,11 @@ public class BillLogicImpl implements BillLogic {
         final long billId = actionParam.getBillId();
         final String userCode = actionParam.getUserCode();
 
-        List<BillTaskEntity> billTaskEntities = billTaskService.findApprovingByBillAndTaskId(billId, taskId);
-        final Set<String> collect = billTaskEntities.stream().map(BillTaskEntity::getUserCode).collect(Collectors.toSet());
+        List<BillTaskEntity> billTaskEntities =
+                billTaskService.findApprovingByBillAndTaskId(billId, taskId);
+        final Set<String> collect = billTaskEntities.stream()
+                .map(BillTaskEntity::getUserCode)
+                .collect(Collectors.toSet());
         if (collect.contains(actionParam.getEndorseApprover())) {
             throw new RbException(ENDORSE_CANNOT_IN_NODE);
         }
@@ -1240,7 +1327,8 @@ public class BillLogicImpl implements BillLogic {
             case APPROVAL:
                 // 更新提交的formdata
                 final String formData = actionParam.getFormData();
-                if (!Strings.isNullOrEmpty(formData) && !org.apache.commons.lang3.StringUtils.equals("{}", formData)) {
+                if (!Strings.isNullOrEmpty(
+                        formData) && !org.apache.commons.lang3.StringUtils.equals("{}", formData)) {
                     this.billItemLogic.updateByFormDataByBill(billId, formData);
                 }
                 break;
@@ -1294,7 +1382,8 @@ public class BillLogicImpl implements BillLogic {
             case APPROVAL:
                 // 更新提交的formdata
                 final String formData = actionParam.getFormData();
-                if (!Strings.isNullOrEmpty(formData) && !org.apache.commons.lang3.StringUtils.equals("{}", formData)) {
+                if (!Strings.isNullOrEmpty(
+                        formData) && !org.apache.commons.lang3.StringUtils.equals("{}", formData)) {
                     this.billItemLogic.updateByFormDataByBill(billId, formData);
                 }
                 break;
@@ -1311,33 +1400,38 @@ public class BillLogicImpl implements BillLogic {
         task.setOpinion(opinion);
         task.setDateline(DateTimeUtil.unixTime());
         billTaskService.upldate(task);
-        final BillTaskEntity targetTask = billTaskService.getOne(Wrappers.lambdaQuery(BillTaskEntity.class)
-                .eq(BillTaskEntity::getId, targetTaskId));
+        final BillTaskEntity targetTask = billTaskService.getOne(
+                Wrappers.lambdaQuery(BillTaskEntity.class).eq(BillTaskEntity::getId, targetTaskId));
         if (Objects.isNull(targetTask)) {
             throw new RbException(TARGET_TASK_NULL);
         }
         final String taskNodeKey = targetTask.getTaskNodeKey();
-        final ProcessNodeExtendEntity extendEntity = nodeExtendService
-                .getOne(Wrappers.lambdaQuery(ProcessNodeExtendEntity.class)
+        final ProcessNodeExtendEntity extendEntity = nodeExtendService.getOne(
+                Wrappers.lambdaQuery(ProcessNodeExtendEntity.class)
                         .eq(ProcessNodeExtendEntity::getProcessId, byId.getProcessId())
                         .eq(ProcessNodeExtendEntity::getNodeId, taskNodeKey));
         List<BillTaskEntity> sends = Lists.newArrayList();
         //退回需要删除当前节点审批中的数据
         billTaskService.remove(Wrappers.lambdaQuery(BillTaskEntity.class)
                 .eq(BillTaskEntity::getBillId, billId)
-                .eq(BillTaskEntity::getTaskNodeKey, task.getTaskNodeKey()).ne(BillTaskEntity::getId,task.getId()));
+                .eq(BillTaskEntity::getTaskNodeKey, task.getTaskNodeKey())
+                .ne(BillTaskEntity::getId, task.getId()));
         if (!extendEntity.getLinkType().equals(NodeLinkType.create.name())) {
-            billBpmnLogic.returnToTargetTask(task, targetTask, userCode, opinion, actionParam.getNextApprover());
+            billBpmnLogic.returnToTargetTask(task, targetTask, userCode, opinion,
+                    actionParam.getNextApprover());
         } else {
             /**
              *表示是退回到发起节点需要进行操作需要找到当前审批的最新的创建节点，然后找到任务taskId和用户然后重新创建一个节点任务
              */
-            billService.update(Wrappers.lambdaUpdate(ToaBillEntity.class).set(ToaBillEntity::getStatus, BillStatus.REPULSE.getStatus()).eq(ToaBillEntity::getId, billId));
+            billService.update(Wrappers.lambdaUpdate(ToaBillEntity.class)
+                    .set(ToaBillEntity::getStatus, BillStatus.REPULSE.getStatus())
+                    .eq(ToaBillEntity::getId, billId));
             BillTaskEntity createTask = billTaskService.findCreateTaskByBill(billId);
             if (Objects.isNull(createTask)) {
                 throw new RbException(StringPool.EMPTY, ProcessCode.PROCESS_ACTIVITI_ERROR);
             }
-            final BillTaskEntity newBillTask = BeanUtil.sourceToTarget(createTask, BillTaskEntity.class);
+            final BillTaskEntity newBillTask =
+                    BeanUtil.sourceToTarget(createTask, BillTaskEntity.class);
             newBillTask.setId(IdWorker.getId());
             newBillTask.setSourceTaskId(task.getId());
             newBillTask.setSourceUserCode(userCode);
@@ -1364,9 +1458,14 @@ public class BillLogicImpl implements BillLogic {
      * @param turnUser 移交用户
      */
     @Override
-    public void turnUser(long billId, String taskId, String turnUser, String userCode, String opinion) {
-        List<BillTaskEntity> billTaskEntities = billTaskService.findApprovingByBillAndTaskId(billId, taskId);
-        Set<String> collect = billTaskEntities.stream().map(BillTaskEntity::getUserCode).collect(Collectors.toSet());
+    public void turnUser(
+            long billId, String taskId, String turnUser, String userCode, String opinion
+    ) {
+        List<BillTaskEntity> billTaskEntities =
+                billTaskService.findApprovingByBillAndTaskId(billId, taskId);
+        Set<String> collect = billTaskEntities.stream()
+                .map(BillTaskEntity::getUserCode)
+                .collect(Collectors.toSet());
         // 更新移交
         final List<String> split = StrUtil.split(turnUser, ',');
         final Set<String> hashSet = new HashSet(split);
@@ -1387,7 +1486,8 @@ public class BillLogicImpl implements BillLogic {
 
                 List<BillTaskEntity> insertLists = Lists.newArrayList();
                 for (String s : hashSet) {
-                    final BillTaskEntity turnTask = BeanUtil.sourceToTarget(task, BillTaskEntity.class);
+                    final BillTaskEntity turnTask =
+                            BeanUtil.sourceToTarget(task, BillTaskEntity.class);
                     turnTask.setSourceTaskId(task.getId());
                     turnTask.setSourceUserCode(userCode);
                     turnTask.setTaskType(BillTaskType.TURN.getValue());
@@ -1423,9 +1523,11 @@ public class BillLogicImpl implements BillLogic {
     @Override
     public BillDetailVO<List<FormFieldVO>> createByApp(long processId) {
         ProcessDetailDTO process = checkProcess(processId);
-        final List<FormFieldVO> fieldVOS = formBasicConvert.FormFieldPOToVO(formFieldService.findVoByProcessId(processId));
+        final List<FormFieldVO> fieldVOS =
+                formBasicConvert.FormFieldPOToVO(formFieldService.findVoByProcessId(processId));
         List<BillOpinionVO> opinionVOS = Lists.newArrayList();
-        String firstNodeId = nodeExtendService.findTaskNodeIdByProcessAndLinkType(processId, NodeLinkType.create);
+        String firstNodeId = nodeExtendService.findTaskNodeIdByProcessAndLinkType(processId,
+                NodeLinkType.create);
         // 获取授权信息
         final List<FormPermissionVO> permissionVOS;
         permissionVOS = billBpmnLogic.nodeFieldPermission(processId, firstNodeId);
@@ -1456,8 +1558,11 @@ public class BillLogicImpl implements BillLogic {
      * @return 验证结果
      */
     @Override
-    public ValidationResultDTO validation(long processId, long billId, String formDataJson, String userCode) {
-        final Map<String, Object> dataMap = JSON.parseObject(formDataJson, FastJsonType.MAP_OBJECT_TR);
+    public ValidationResultDTO validation(
+            long processId, long billId, String formDataJson, String userCode
+    ) {
+        final Map<String, Object> dataMap =
+                JSON.parseObject(formDataJson, FastJsonType.MAP_OBJECT_TR);
         final BillDataContext billDataValue;
         final ProcessDetailPO processDetail = this.processService.findDetailById(processId);
         billDataValue = this.resolveFormDataByValidation(billId, processDetail, dataMap);
@@ -1475,19 +1580,24 @@ public class BillLogicImpl implements BillLogic {
      */
     @Override
     public List<String> getNodeCondition(long processId, long billId, String taskId) {
-        final List<BillTaskEntity> list = billTaskService.list(Wrappers.lambdaQuery(BillTaskEntity.class)
-                .eq(BillTaskEntity::getBillId, billId).eq(BillTaskEntity::getTaskId, taskId));
-        final Set<String> nodeKeys = list.stream().map(BillTaskEntity::getTaskNodeKey).collect(Collectors.toSet());
+        final List<BillTaskEntity> list = billTaskService.list(
+                Wrappers.lambdaQuery(BillTaskEntity.class)
+                        .eq(BillTaskEntity::getBillId, billId)
+                        .eq(BillTaskEntity::getTaskId, taskId));
+        final Set<String> nodeKeys =
+                list.stream().map(BillTaskEntity::getTaskNodeKey).collect(Collectors.toSet());
         if (CollectionUtil.isEmpty(nodeKeys)) {
             return Collections.emptyList();
         }
-        final List<ProcessNodeApproverEntity> list1 = nodeApproverService
-                .list(Wrappers.lambdaQuery(ProcessNodeApproverEntity.class)
+        final List<ProcessNodeApproverEntity> list1 = nodeApproverService.list(
+                Wrappers.lambdaQuery(ProcessNodeApproverEntity.class)
                         .eq(ProcessNodeApproverEntity::getProcessId, processId)
                         .in(ProcessNodeApproverEntity::getNodeId, nodeKeys));
-        final List<String> params =
-                list1.stream().filter(a -> !Strings.isNullOrEmpty(a.getExpress()) && a.getExpress().indexOf("implication") != -1)
-                        .map(ProcessNodeApproverEntity::getExpressParams).collect(Collectors.toList());
+        final List<String> params = list1.stream()
+                .filter(a -> !Strings.isNullOrEmpty(a.getExpress()) && a.getExpress()
+                        .indexOf("implication") != -1)
+                .map(ProcessNodeApproverEntity::getExpressParams)
+                .collect(Collectors.toList());
         List<String> result = Lists.newArrayList();
         for (String param : params) {
             final JSONObject jsonObject = JSON.parseObject(param);
@@ -1511,23 +1621,26 @@ public class BillLogicImpl implements BillLogic {
      */
     @Override
     public String findTodoSize() {
-        List<Integer> statusList = Lists.newArrayList(
-                BillStatus.APPROVAL.getStatus(), BillStatus.REFUSE.getStatus()
-        );
+        List<Integer> statusList =
+                Lists.newArrayList(BillStatus.APPROVAL.getStatus(), BillStatus.REFUSE.getStatus());
         final String userCode = loginUserHolder.getUserCode();
         final String todoSize = this.billService.findTodoSizeByStatus(userCode, statusList);
         return todoSize;
     }
 
     @Override
-    public Pair<List<BillItemVO>, Long> findAllByQuery(Integer pageNo, Integer pageSize, DraftBillQuery query) {
+    public Pair<List<BillItemVO>, Long> findAllByQuery(
+            Integer pageNo, Integer pageSize, DraftBillQuery query
+    ) {
         Page page = new Page(pageNo, pageSize);
         final List<BillItemPO> billDatas = this.billService.findAllByQuery(page, query);
         final Page<BillItemVO> billItemVOPage = toItemVOList(page, billDatas, null);
         return Pair.of(billItemVOPage.getRecords(), billItemVOPage.getTotal());
     }
 
-    private ValidationResultDTO validataionWithResult(BillDataContext billDataValue, String userCode, BillValidationLogic validationService) {
+    private ValidationResultDTO validataionWithResult(
+            BillDataContext billDataValue, String userCode, BillValidationLogic validationService
+    ) {
 
         if (null != validationService) {
             return validationService.validation(billDataValue, userCode);
@@ -1550,9 +1663,7 @@ public class BillLogicImpl implements BillLogic {
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public BillDataContext resolveFormDataByValidation(
-            long billId,
-            ProcessDetailPO processDetail,
-            Map<String, Object> formDataMap
+            long billId, ProcessDetailPO processDetail, Map<String, Object> formDataMap
     ) {
         long processId = processDetail.getId();
 
@@ -1624,8 +1735,10 @@ public class BillLogicImpl implements BillLogic {
                         continue;
                     }
 
-                    final Triple<Boolean, List<BillAssociatedVO>, List<BillBizDataEntity>> detailItemTriple;
-                    detailItemTriple = billItemLogic.detailFormFileds(newBillId, detailgroupDatas, detailFields);
+                    final Triple<Boolean, List<BillAssociatedVO>, List<BillBizDataEntity>>
+                            detailItemTriple;
+                    detailItemTriple = billItemLogic.detailFormFileds(newBillId, detailgroupDatas,
+                            detailFields);
                     final Boolean attachment = detailItemTriple.getLeft();
                     if (attachment) {
                         dataValueBuilder.attachment(true);
@@ -1649,11 +1762,13 @@ public class BillLogicImpl implements BillLogic {
     private List<BillOpinionVO> billOpinions(ToaBillEntity bill) {
         long processId = MoreObjects.firstNonNull(bill.getProcessId(), 0L);
         final List<BillOpinionVO> opinionVOS = Lists.newArrayList();
-        final List<ProcessNodeExtendEntity> taskNodes = nodeExtendService.findTaskNodeByProcess(processId);
+        final List<ProcessNodeExtendEntity> taskNodes =
+                nodeExtendService.findTaskNodeByProcess(processId);
         if (CollectionUtil.isNotEmpty(taskNodes)) {
             for (ProcessNodeExtendEntity taskNode : taskNodes) {
                 final String linkType = taskNode.getLinkType();
-                if (org.apache.commons.lang3.StringUtils.equals(linkType, NodeLinkType.approvl.name())) {
+                if (org.apache.commons.lang3.StringUtils.equals(linkType,
+                        NodeLinkType.approvl.name())) {
                     BillOpinionVO billOpinionVO = new BillOpinionVO();
                     billOpinionVO.setTitle(taskNode.getNodeName());
                     opinionVOS.add(billOpinionVO);
@@ -1663,11 +1778,15 @@ public class BillLogicImpl implements BillLogic {
         return opinionVOS;
     }
 
-    private <T> BillDetailVO.BillDetailVOBuilder<T> billDetailBuilder(BillDataJsonEntity billDataJson, ToaBillEntity bill) {
+    private <T> BillDetailVO.BillDetailVOBuilder<T> billDetailBuilder(
+            BillDataJsonEntity billDataJson, ToaBillEntity bill
+    ) {
         return billDetailBuilder(billDataJson, bill, StringPool.EMPTY);
     }
 
-    private <T> BillDetailVO.BillDetailVOBuilder<T> billDetailBuilder(BillDataJsonEntity billDataJson, ToaBillEntity bill, String page) {
+    private <T> BillDetailVO.BillDetailVOBuilder<T> billDetailBuilder(
+            BillDataJsonEntity billDataJson, ToaBillEntity bill, String page
+    ) {
         long billId = bill.getId();
         long processId = bill.getProcessId();
         final String userCode = loginUserHolder.getUserCode();
@@ -1721,8 +1840,9 @@ public class BillLogicImpl implements BillLogic {
                             for (FormPermissionVO permission : permissions) {
                                 permission.setEdit(false);
                             }
-                        } else if (!Strings.isNullOrEmpty(page)
-                                && org.apache.commons.lang3.StringUtils.equalsAny(page, "cc", "approved")) {
+                        } else if (!Strings.isNullOrEmpty(
+                                page) && org.apache.commons.lang3.StringUtils.equalsAny(page, "cc",
+                                "approved")) {
                             // 来自我发起的列表和抄送我的列表，这个时候，所有的按钮权限应该都是不可编辑的
                             for (FormPermissionVO permission : permissions) {
                                 permission.setEdit(false);
@@ -1733,7 +1853,8 @@ public class BillLogicImpl implements BillLogic {
                 }
                 case REFUSE_FILL_IN:
                     permissions = billBpmnLogic.findPermissionByProcessStartNode(processId);
-                    if (CollectionUtil.isNotEmpty(permissions) && billStatus == BillStatus.COMPLETE) {
+                    if (CollectionUtil.isNotEmpty(
+                            permissions) && billStatus == BillStatus.COMPLETE) {
                         for (FormPermissionVO permission : permissions) {
                             permission.setEdit(false);
                         }
@@ -1753,7 +1874,8 @@ public class BillLogicImpl implements BillLogic {
                 }
             }
         }
-        Map<String, Object> formData = JSON.parseObject(billDataJson.getFormData(), FastJsonType.MAP_OBJECT_TR);
+        Map<String, Object> formData =
+                JSON.parseObject(billDataJson.getFormData(), FastJsonType.MAP_OBJECT_TR);
         String title = StringPool.EMPTY;
         if (!Strings.isNullOrEmpty(bill.getTitle())) {
             title = bill.getTitle();
@@ -1770,7 +1892,9 @@ public class BillLogicImpl implements BillLogic {
          * 需要对按钮进行过滤
          */
         List<String> newBtns = billBtnLogic.filterByNode(billTask, btns);
-        detailBuilder.title(title).formData(formData).processId(processId)
+        detailBuilder.title(title)
+                .formData(formData)
+                .processId(processId)
                 .billId(billId)
                 .permission(permissions)
                 .btns(newBtns);
@@ -1802,10 +1926,13 @@ public class BillLogicImpl implements BillLogic {
      * @param title   审批标题
      * @return 封装后的表单字段信息
      */
-    private Map<String, Object> bizFormData(ProcessDetailDTO process, UserInfoDTO userInfoDTO, String title) {
+    private Map<String, Object> bizFormData(
+            ProcessDetailDTO process, UserInfoDTO userInfoDTO, String title
+    ) {
         final long processId = process.getId();
         final long processCodeId = Objects.isNull(process.getCodeId()) ? 0 : process.getCodeId();
-        final List<FormFieldEntity> bizFields = this.formFieldService.findBizFiled(processId, FormXtype.biz);
+        final List<FormFieldEntity> bizFields =
+                this.formFieldService.findBizFiled(processId, FormXtype.biz);
         if (CollectionUtil.isEmpty(bizFields)) {
             return Collections.emptyMap();
         }
@@ -1835,7 +1962,8 @@ public class BillLogicImpl implements BillLogic {
                     if (!Objects.isNull(userInfoDTO)) {
                         final List<UserOrgDTO> orgs = userInfoDTO.getOrgs();
                         if (CollectionUtil.isNotEmpty(orgs)) {
-                            final List<String> orgNames = orgs.stream().map(UserOrgDTO::getOrgName)
+                            final List<String> orgNames = orgs.stream()
+                                    .map(UserOrgDTO::getOrgName)
                                     .collect(Collectors.toList());
                             organizationName = StrUtil.join(",", orgNames);
                         }
@@ -1857,23 +1985,28 @@ public class BillLogicImpl implements BillLogic {
 
     @Override
     public List<ProcessTypeVO> findTodoCateSize() {
-        LambdaQueryWrapper<ProcessTypeEntity> wrapper = Wrappers.lambdaQuery(ProcessTypeEntity.class);
+        LambdaQueryWrapper<ProcessTypeEntity> wrapper =
+                Wrappers.lambdaQuery(ProcessTypeEntity.class);
 
         List<ProcessTypeEntity> processTypes = this.processTypeService.list(wrapper);
         if (CollectionUtil.isNotEmpty(processTypes)) {
             int processTypeSize = processTypes.size();
             List<ProcessTypeVO> types = Lists.newArrayListWithCapacity(processTypeSize);
-            List<Integer> statusList = Lists.newArrayList(new Integer[]{BillStatus.APPROVAL.getStatus(), BillStatus.REFUSE.getStatus()});
+            List<Integer> statusList = Lists.newArrayList(
+                    new Integer[]{BillStatus.APPROVAL.getStatus(), BillStatus.REFUSE.getStatus()});
             String userCode = this.loginUserHolder.getUserCode();
-            List<ProcessGridPO> todoCateSize = this.billService.findTodoCateSize(userCode, statusList);
+            List<ProcessGridPO> todoCateSize =
+                    this.billService.findTodoCateSize(userCode, statusList);
             List<ProcessVO> processVOS = this.processBasicConvert.processGridPOToVO(todoCateSize);
-            Map<Long, List<ProcessVO>> collect = (Map)processVOS.stream().collect(Collectors.groupingBy(ProcessVO::getTypeId));
+            Map<Long, List<ProcessVO>> collect =
+                    (Map) processVOS.stream().collect(Collectors.groupingBy(ProcessVO::getTypeId));
 
             ProcessTypeVO processTypeVO;
-            for(Iterator var10 = processTypes.iterator(); var10.hasNext(); types.add(processTypeVO)) {
-                ProcessTypeEntity processType = (ProcessTypeEntity)var10.next();
+            for (Iterator var10 = processTypes.iterator(); var10.hasNext(); types.add(
+                    processTypeVO)) {
+                ProcessTypeEntity processType = (ProcessTypeEntity) var10.next();
                 Long id = processType.getId();
-                List<ProcessVO> processVOS1 = (List)collect.get(id);
+                List<ProcessVO> processVOS1 = (List) collect.get(id);
                 processTypeVO = new ProcessTypeVO();
                 processTypeVO.setName(processType.getName());
                 processTypeVO.setId(processType.getId());
