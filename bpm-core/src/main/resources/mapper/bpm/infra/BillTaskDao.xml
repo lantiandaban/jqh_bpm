@@ -128,7 +128,7 @@
         WHERE pne.is_deleted = 0
           and bt.is_deleted = 0
           AND bt.node_status IN (2, 3, 8, 9)
-          and bt.bill_id = #{billId}
+          and bt.bill_id = #{billId} AND pne.link_type!=#{createTask}
         GROUP BY pne.id
     </select>
 

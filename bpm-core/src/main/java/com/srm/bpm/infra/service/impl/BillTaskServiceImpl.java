@@ -53,7 +53,8 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      */
     @Override
     public List<BillTaskEntity> findTaskByBillAndUserCode(long billId, String userCode) {
-        final List<BillTaskEntity> billTask = this.baseMapper.selectTaskByBillAndUserCode(billId, userCode);
+        final List<BillTaskEntity> billTask =
+                this.baseMapper.selectTaskByBillAndUserCode(billId, userCode);
         return billTask;
     }
 
@@ -68,9 +69,11 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
         if (billId <= 0) {
             return Collections.emptyMap();
         }
-        final List<BillTaskEntity> billTasks = list(Wrappers.lambdaQuery(BillTaskEntity.class).eq(BillTaskEntity::getBillId, billId));
+        final List<BillTaskEntity> billTasks = list(Wrappers.lambdaQuery(BillTaskEntity.class)
+                .eq(BillTaskEntity::getBillId, billId));
         if (CollectionUtil.isNotEmpty(billTasks)) {
-            final Map<String, List<BillTaskEntity>> collect = billTasks.stream().collect(Collectors.groupingBy(BillTaskEntity::getNodeName));
+            final Map<String, List<BillTaskEntity>> collect =
+                    billTasks.stream().collect(Collectors.groupingBy(BillTaskEntity::getNodeName));
             return collect;
         }
         return Collections.emptyMap();
@@ -98,9 +101,15 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      * @return 审批任务
      */
     @Override
-    public Optional<BillTaskEntity> findByBillAndEmployeeAndTaskId(long billId, String taskId, String userCode) {
-        final LambdaQueryWrapper<BillTaskEntity> queryWrapper = Wrappers.lambdaQuery(BillTaskEntity.class).eq(BillTaskEntity::getBillId, billId)
-                .eq(BillTaskEntity::getTaskId, taskId).eq(BillTaskEntity::getUserCode, userCode).orderByDesc(BillTaskEntity::getSort);
+    public Optional<BillTaskEntity> findByBillAndEmployeeAndTaskId(
+            long billId, String taskId, String userCode
+    ) {
+        final LambdaQueryWrapper<BillTaskEntity> queryWrapper =
+                Wrappers.lambdaQuery(BillTaskEntity.class)
+                        .eq(BillTaskEntity::getBillId, billId)
+                        .eq(BillTaskEntity::getTaskId, taskId)
+                        .eq(BillTaskEntity::getUserCode, userCode)
+                        .orderByDesc(BillTaskEntity::getSort);
         final java.util.Optional<BillTaskEntity> optional = unique(queryWrapper);
         if (!optional.isPresent()) {
             return Optional.absent();
@@ -118,7 +127,8 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      */
     @Override
     public int findActiveExcludeSelf(Long billId, String taskId, Long id) {
-        return baseMapper.selectActiveExcludeSelf(billId, taskId, id, BillTaskStatus.AGREE.getStatus());
+        return baseMapper.selectActiveExcludeSelf(billId, taskId, id,
+                BillTaskStatus.AGREE.getStatus());
     }
 
     /**
@@ -129,8 +139,8 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      * @return 数量
      */
     @Override
-    public int findTotalCount(Long billId, String taskId,int type) {
-        return baseMapper.selectTotalCount(billId, taskId,type);
+    public int findTotalCount(Long billId, String taskId, int type) {
+        return baseMapper.selectTotalCount(billId, taskId, type);
     }
 
     /**
@@ -150,9 +160,11 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
         task.setDateline(dateline);
         task.setAction(BillAction.agree.name());
         task.setId(null);
-        final LambdaUpdateWrapper<BillTaskEntity> billTaskEntityLambdaUpdateWrapper = Wrappers.lambdaUpdate();
+        final LambdaUpdateWrapper<BillTaskEntity> billTaskEntityLambdaUpdateWrapper =
+                Wrappers.lambdaUpdate();
         billTaskEntityLambdaUpdateWrapper.eq(BillTaskEntity::getBillId, actionParam.getBillId())
-                .eq(BillTaskEntity::getUserCode, userCode).eq(BillTaskEntity::getTaskId, actionParam.getTaskId())
+                .eq(BillTaskEntity::getUserCode, userCode)
+                .eq(BillTaskEntity::getTaskId, actionParam.getTaskId())
                 .eq(BillTaskEntity::getNodeStatus, BillTaskStatus.APPROVAL.getStatus());
         this.update(task, billTaskEntityLambdaUpdateWrapper);
 
@@ -167,8 +179,11 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      */
     @Override
     public void deleteApproval(Long billId, String taskId, int status) {
-        final LambdaQueryWrapper<BillTaskEntity> queryWrapper = Wrappers.lambdaQuery(BillTaskEntity.class).eq(BillTaskEntity::getBillId, billId)
-                .eq(BillTaskEntity::getTaskId, taskId).eq(BillTaskEntity::getNodeStatus, status);
+        final LambdaQueryWrapper<BillTaskEntity> queryWrapper =
+                Wrappers.lambdaQuery(BillTaskEntity.class)
+                        .eq(BillTaskEntity::getBillId, billId)
+                        .eq(BillTaskEntity::getTaskId, taskId)
+                        .eq(BillTaskEntity::getNodeStatus, status);
         remove(queryWrapper);
     }
 
@@ -195,7 +210,8 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      */
     @Override
     public List<BillTaskEntity> findByBillId(long billId) {
-        return list(Wrappers.lambdaQuery(BillTaskEntity.class).eq(BillTaskEntity::getBillId, billId));
+        return list(
+                Wrappers.lambdaQuery(BillTaskEntity.class).eq(BillTaskEntity::getBillId, billId));
     }
 
     /**
@@ -207,9 +223,12 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      */
     @Override
     public List<BillTaskEntity> findApprovingByBillAndTaskId(long billId, String taskId) {
-        final LambdaQueryWrapper<BillTaskEntity> queryWrapper = Wrappers.lambdaQuery(BillTaskEntity.class)
-                .eq(BillTaskEntity::getBillId, billId).eq(BillTaskEntity::getTaskType, BillTaskType.DEFAULT.getValue());
-        queryWrapper.eq(BillTaskEntity::getNodeStatus, BillTaskStatus.APPROVAL.getStatus()).eq(BillTaskEntity::getTaskId, taskId);
+        final LambdaQueryWrapper<BillTaskEntity> queryWrapper =
+                Wrappers.lambdaQuery(BillTaskEntity.class)
+                        .eq(BillTaskEntity::getBillId, billId)
+                        .eq(BillTaskEntity::getTaskType, BillTaskType.DEFAULT.getValue());
+        queryWrapper.eq(BillTaskEntity::getNodeStatus, BillTaskStatus.APPROVAL.getStatus())
+                .eq(BillTaskEntity::getTaskId, taskId);
         return this.list(queryWrapper);
     }
 
@@ -222,8 +241,11 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      * @return 任务列表
      */
     @Override
-    public List<BillTaskEntity> findEndorseByUserAndTaskId(long billId, String taskId, String userCode) {
-        final LambdaQueryWrapper<BillTaskEntity> queryWrapper = Wrappers.lambdaQuery(BillTaskEntity.class);
+    public List<BillTaskEntity> findEndorseByUserAndTaskId(
+            long billId, String taskId, String userCode
+    ) {
+        final LambdaQueryWrapper<BillTaskEntity> queryWrapper =
+                Wrappers.lambdaQuery(BillTaskEntity.class);
         queryWrapper.eq(BillTaskEntity::getBillId, billId);
         queryWrapper.eq(BillTaskEntity::getTaskId, taskId);
         queryWrapper.eq(BillTaskEntity::getUserCode, userCode);
@@ -247,7 +269,10 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      * 保存跳过的节点任务
      */
     @Override
-    public void saveSkipTask(String taskNodeId, Long billId, String taskId, String taskName, String lastTaskNodeId, String lastTaskId) {
+    public void saveSkipTask(
+            String taskNodeId, Long billId, String taskId, String taskName, String lastTaskNodeId,
+            String lastTaskId
+    ) {
         BillTaskEntity billTask = new BillTaskEntity();
         billTask.setAction(BillAction.none.name());
         billTask.setSort(System.currentTimeMillis());
@@ -273,10 +298,11 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      */
     @Override
     public List<BillTaskEntity> findApprovingByBillAndUser(long billId, String user) {
-        final LambdaQueryWrapper<BillTaskEntity> queryWrapper = Wrappers.lambdaQuery(BillTaskEntity.class)
-                .eq(BillTaskEntity::getBillId, billId)
-                .eq(BillTaskEntity::getNodeStatus, BillTaskStatus.APPROVAL)
-                .eq(BillTaskEntity::getUserCode, user);
+        final LambdaQueryWrapper<BillTaskEntity> queryWrapper =
+                Wrappers.lambdaQuery(BillTaskEntity.class)
+                        .eq(BillTaskEntity::getBillId, billId)
+                        .eq(BillTaskEntity::getNodeStatus, BillTaskStatus.APPROVAL)
+                        .eq(BillTaskEntity::getUserCode, user);
         return list(queryWrapper);
     }
 
@@ -288,15 +314,17 @@ public class BillTaskServiceImpl extends BaseServiceImpl<BillTaskDao, BillTaskEn
      */
     @Override
     public List<BillTaskDTO> getHistoryTasks(Long billid) {
-        return this.baseMapper.selectHistoryTasks(billid);
+        return this.baseMapper.selectHistoryTasks(billid, NodeLinkType.create.name());
     }
 
     @Override
     public List<BillTaskEntity> findApprovedByBillAndUser(long billId, String user) {
-        final LambdaQueryWrapper<BillTaskEntity> queryWrapper = Wrappers.lambdaQuery(BillTaskEntity.class)
-                .eq(BillTaskEntity::getBillId, billId)
-                .in(BillTaskEntity::getNodeStatus, BillTaskStatus.AGREE,BillTaskStatus.REFUSE,BillTaskStatus.REPULSE)
-                .eq(BillTaskEntity::getUserCode, user);
+        final LambdaQueryWrapper<BillTaskEntity> queryWrapper =
+                Wrappers.lambdaQuery(BillTaskEntity.class)
+                        .eq(BillTaskEntity::getBillId, billId)
+                        .in(BillTaskEntity::getNodeStatus, BillTaskStatus.AGREE,
+                                BillTaskStatus.REFUSE, BillTaskStatus.REPULSE)
+                        .eq(BillTaskEntity::getUserCode, user);
         return list(queryWrapper);
     }
 }

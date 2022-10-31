@@ -66,6 +66,6 @@ public interface BillTaskDao extends BaseDao<BillTaskEntity> {
      * @param billid 审批单id
      * @return 审批节点
      */
-    List<BillTaskDTO> selectHistoryTasks(@Param("billId")Long billid);
+    List<BillTaskDTO> selectHistoryTasks(@Param("billId")Long billid,@Param("createTask") String createTask);
 
 }
