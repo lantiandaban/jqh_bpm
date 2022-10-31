@@ -12,14 +12,6 @@
 
 package com.srm.bpm.logic.service.impl;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.srm.bpm.facde.RestTemplateUtil;
@@ -27,6 +19,13 @@ import com.srm.bpm.logic.dto.FlowMsgDTO;
 import com.srm.bpm.logic.service.PushMsgLogic;
 import com.srm.common.data.rest.R;
 import com.srm.config.BpmConfig;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +43,9 @@ public class PushMsgLogicImpl implements PushMsgLogic {
 		if(!CollectionUtils.isEmpty(allMsg)) {
 			JSONObject data = new JSONObject();
 			data.put("msg", JSON.toJSON(allMsg));
-			log.info("回调返回的数据:{}", allMsg);
+			log.info("消息推送的数据:{}", allMsg);
 			final ResponseEntity<R> post = restTemplateUtil.post(bpmConfig.getPushmsgUrl(), data, "1");
-			log.info("回调返回的数据:{}", post);
+			log.info("消息返回的数据:{}", post);
 		}
 	}
 }

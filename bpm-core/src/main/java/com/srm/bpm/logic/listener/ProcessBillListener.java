@@ -5,6 +5,8 @@ package com.srm.bpm.logic.listener;
 import com.google.common.base.MoreObjects;
 import com.google.common.primitives.Longs;
 
+import com.srm.bpm.infra.entity.ToaBillEntity;
+import com.srm.bpm.infra.service.ToaBillService;
 import com.srm.bpm.logic.service.BillLogic;
 import com.srm.config.SpringContextHolder;
 
@@ -42,9 +44,12 @@ public class ProcessBillListener implements ExecutionListener {
             // 更新审批单为结束
             if (StringUtils.isNotEmpty(businessKey)) {
                 long billId = MoreObjects.firstNonNull(Longs.tryParse(businessKey), 0L);
+                log.debug("ProcessBillListener流程结束回调:{}",billId);
                 if (billId > 0) {
                     final BillLogic billService = SpringContextHolder.getBean(BillLogic.class);
-                    billService.complete(billId, action);
+                    final ToaBillService toaBillService = SpringContextHolder.getBean(ToaBillService.class);
+                    final ToaBillEntity byId = toaBillService.getById(billId);
+                    billService.complete(byId, action);
                 }
             }
         }

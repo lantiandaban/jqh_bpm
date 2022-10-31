@@ -3,6 +3,7 @@
 package com.srm.bpm.logic.service;
 
 import com.srm.bpm.infra.entity.BillTaskEntity;
+import com.srm.bpm.infra.entity.ToaBillEntity;
 import com.srm.bpm.infra.po.ProcessDetailPO;
 import com.srm.bpm.logic.context.BillDataContext;
 import com.srm.bpm.logic.dto.BillActionParamDTO;
@@ -166,7 +167,7 @@ public interface BillLogic {
      *
      * @param billId 审批单ID
      */
-    void complete(long billId,String action);
+    void complete(ToaBillEntity byId,String action);
 
     /**
      * 获取某个审批单的审批历史记录

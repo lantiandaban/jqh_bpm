@@ -1,16 +1,10 @@
 
 package com.srm.bpm.logic.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.srm.bpm.infra.entity.BillTaskEntity;
 import com.srm.bpm.infra.entity.ProcessNodeExtendEntity;
 import com.srm.bpm.infra.entity.ToaBillEntity;
@@ -22,6 +16,14 @@ import com.srm.bpm.logic.constant.StringPool;
 import com.srm.bpm.logic.dto.FlowMsgDTO;
 import com.srm.bpm.logic.service.FlowMsgLogic;
 import com.srm.bpm.logic.service.PushMsgLogic;
+
+import org.jetbrains.annotations.NotNull;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,7 @@ public class FlowMsgLogicImpl implements FlowMsgLogic {
 	private final ProcessNodeExtendService nodeExtendService;
 
 	@Override
+	@Async
 	public void sendMsg(List<BillTaskEntity> billTaskEntities) {
 		if (CollectionUtil.isNotEmpty(billTaskEntities)) {
 			final BillTaskEntity billTaskEntity = billTaskEntities.get(0);

@@ -894,34 +894,32 @@ public class BillLogicImpl implements BillLogic {
     /**
      * 结束并设置完成审批单
      *
-     * @param billId 审批单ID
+     * @param bill 审批单ID
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void complete(long billId, String action) {
-        ToaBillEntity bill = new ToaBillEntity();
+    //    @Transactional(rollbackFor = Exception.class)
+    public void complete(ToaBillEntity bill, String action) {
         final int dateline = DateTimeUtil.unixTime();
-        bill.setId(billId);
         bill.setCompletionTime(dateline);
         bill.setStatus(BillStatus.COMPLETE.getStatus());
         bill.setArchivedTime(dateline);
         TimerTask businessTask = new TimerTask() {
             @Override
             public void run() {
-                final ToaBillEntity byId = billService.getById(billId);
                 billService.upldate(bill);
+                log.info("查询到的审批单数据:{}", bill);
                 if (action.equals(BillAction.refuse.name())) {
-                    callBackLogic.callBack(byId.getProcessId(), billId,
+                    callBackLogic.callBack(bill.getProcessId(), bill.getId(),
                             BillTaskStatus.REFUSE.getStatus());
                 } else {
                     BillTaskEntity a = new BillTaskEntity();
-                    a.setBillId(byId.getId());
-                    a.setUserCode(byId.getSender());
+                    a.setBillId(bill.getId());
+                    a.setUserCode(bill.getSender());
                     a.setNodeStatus(BillTaskStatus.COMPLATE.getStatus());
-                    a.setNodeName(byId.getTitle());
+                    a.setNodeName(bill.getTitle());
                     a.setOpinion("通过");
                     flowMsgLogic.sendMsg(Lists.newArrayList(a));
-                    callBackLogic.callBack(byId.getProcessId(), billId,
+                    callBackLogic.callBack(bill.getProcessId(), bill.getId(),
                             BillStatus.COMPLETE.getStatus());
                 }
             }

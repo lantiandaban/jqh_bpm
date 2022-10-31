@@ -42,7 +42,7 @@ public class CallBackLogicImpl implements CallBackLogic {
         data.put("processId", processId);
         data.put("billId", billId);
         data.put("status", status);
-        log.info("回调返回的数据:{}", data);
+        log.info("回调推送的数据:{}", data);
 
         final ResponseEntity<R> post = restTemplateUtil.post(bpmConfig.getCallbackUrl(), data, "1");
         log.info("回调返回的数据:{}", post);
