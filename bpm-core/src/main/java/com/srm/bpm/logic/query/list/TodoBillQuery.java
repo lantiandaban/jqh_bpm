@@ -22,6 +22,11 @@ public class TodoBillQuery extends DraftBillQuery {
      * 发起人
      */
     private long sender;
+    
+    /**
+     * 发起人姓名
+     */
+    private String senderName;
 
 
     /**
