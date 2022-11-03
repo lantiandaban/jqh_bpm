@@ -9,7 +9,10 @@ import com.baomidou.mybatisplus.core.enums.SqlLike;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlUtils;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 
 import lombok.Data;
 import com.srm.bpm.logic.constant.StringPool;
@@ -64,18 +67,30 @@ public class DraftBillQuery implements Serializable {
             return 0;
         } else {
             final String[] timeSplit = rangeTime.split(RANGE_TIME_DASH);
-            final LocalDate startDay = DateTimeUtil.str2Date(timeSplit[0]);
-            return DateTimeUtil.timeMillsOfStartDate(startDay) / 1000;
+            String startDay = timeSplit[0];
+			try {
+				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDay);
+				return startDate.getTime()/1000;
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return 0;
+			}
         }
     }
 
     public long getUnixEndTime() {
         if (Strings.isNullOrEmpty(rangeTime)) {
-            return 0;
+            return Long.MAX_VALUE;
         } else {
             final String[] timeSplit = rangeTime.split(RANGE_TIME_DASH);
-            final LocalDate endTime = DateTimeUtil.str2Date(timeSplit[1]);
-            return (DateTimeUtil.timeMillsOfEndDate(endTime) / 1000) + 86399;
+            String endDay = timeSplit[1];
+			try {
+				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDay);
+				return endDate.getTime()/1000 + 86400;
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return Long.MAX_VALUE;
+			}
         }
     }
 
