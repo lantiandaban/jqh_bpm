@@ -61,6 +61,7 @@
         LEFT JOIN toa_form tf ON tf.process_id=tp.id AND tf.is_deleted=0
         LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
         LEFT JOIN process_node_extend pne ON pne.node_id = approver.task_node_key AND pne.is_deleted=0
+        LEFT JOIN sp_user su ON tb.sender = su.id
         WHERE tb.is_deleted = 0 AND tb.status != 0
         <if test="query != null">
             <if test="query.rangeTime != null and  query.rangeTime != ''">
@@ -71,6 +72,9 @@
             </if>
             <if test="query.sender > 0 ">
                 AND tb.sender = #{query.sender}
+            </if>
+            <if test="query.senderName != null and query.senderName != ''">
+                AND su.username like CONCAT('%',#{query.senderName},'%')
             </if>
             <if test="query.code != null and query.code != ''">
                 AND tb.code LIKE #{query.codeLike}
@@ -97,6 +101,7 @@
         brr.is_deleted = 0
         LEFT JOIN toa_form tf ON tf.process_id=tp.id AND tf.is_deleted=0
         LEFT JOIN form_setting fs ON fs.form_id=tf.id AND fs.is_deleted=0
+        LEFT JOIN sp_user su ON tb.sender = su.id
         WHERE tb.is_deleted = 0 AND tb.status in
         <foreach collection="statusList" item="status" separator="," open="(" close=")">
             #{status}
@@ -110,6 +115,9 @@
             </if>
             <if test="query.sender > 0 ">
                 AND tb.sender = #{query.sender}
+            </if>
+            <if test="query.senderName != null and query.senderName != ''">
+                AND su.username like CONCAT('%',#{query.senderName},'%')
             </if>
             <if test="query.code != null and query.code != ''">
                 AND tb.code like #{query.codeLike}

@@ -22,6 +22,8 @@ public class ApprovedBillQuery extends DraftBillQuery {
      * 发起人
      */
     private long sender;
+    
+    private String senderName;
 
 
 
