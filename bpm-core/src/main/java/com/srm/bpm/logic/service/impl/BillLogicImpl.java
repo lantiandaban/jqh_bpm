@@ -1412,8 +1412,7 @@ public class BillLogicImpl implements BillLogic {
         //退回需要删除当前节点审批中的数据
         billTaskService.remove(Wrappers.lambdaQuery(BillTaskEntity.class)
                 .eq(BillTaskEntity::getBillId, billId)
-                .eq(BillTaskEntity::getTaskNodeKey, task.getTaskNodeKey())
-                .ne(BillTaskEntity::getId, task.getId()));
+                .eq(BillTaskEntity::getNodeStatus, BillTaskStatus.APPROVAL.getStatus()));
         if (!extendEntity.getLinkType().equals(NodeLinkType.create.name())) {
             billBpmnLogic.returnToTargetTask(task, targetTask, userCode, opinion,
                     actionParam.getNextApprover());
