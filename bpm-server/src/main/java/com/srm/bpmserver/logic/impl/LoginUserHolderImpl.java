@@ -77,7 +77,7 @@ public class LoginUserHolderImpl implements LoginUserHolder {
         final String userId = getUserCode();
         final List<UserOrgDTO> userOrgDTOS = userCenterDao.selectUserOrgByUserId(Sets.newHashSet(userId));
         if (CollectionUtil.isNotEmpty(userOrgDTOS)) {
-            return userOrgDTOS.stream().map(a -> a.getOrgId().toString()).collect(Collectors.toSet());
+            return userOrgDTOS.stream().map(a -> String.valueOf(a.getOrgId())).collect(Collectors.toSet());
         }
         return Collections.emptySet();
     }
