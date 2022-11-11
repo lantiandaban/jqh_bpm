@@ -55,7 +55,7 @@
         AND btt.node_status IN ( 2, 3, 5,10 )
         AND btt.is_deleted = 0 AND pne.link_type!='create'
         GROUP BY
-        btt.bill_id ) bt INNER JOIN bill_task ba ON bt.ct = ba.sort AND ba.bill_id=bt.bill_id AND ba.user_code = #{userCode}
+        btt.bill_id ) bt INNER JOIN bill_task ba ON bt.ct = ba.sort AND ba.bill_id=bt.bill_id AND ba.user_code = #{userCode}  AND ba.is_deleted=0
         GROUP BY ba.bill_id) approver ON
         approver.bill_id = tb.id
         LEFT JOIN toa_form tf ON tf.process_id=tp.id AND tf.is_deleted=0
@@ -95,7 +95,7 @@
         INNER JOIN bill_data_json bdj ON bdj.bill_id = tb.id and bdj.is_deleted = 0
         INNER JOIN (SELECT ba.node_name, ba.task_id, ba.user_code, ba.bill_id,ba.action FROM
         bill_task ba
-        WHERE node_status = 1 AND ba.user_code = #{approver}
+        WHERE node_status = 1 AND ba.user_code = #{approver} AND ba.is_deleted=0
         ORDER BY sort DESC ) approver ON approver.bill_id = tb.id
         LEFT JOIN bill_read_record brr ON brr.user_code = #{approver} AND brr.bill_id = tb.id and
         brr.is_deleted = 0
@@ -140,7 +140,7 @@
         FROM toa_bill tb INNER JOIN toa_process tp ON tp.id = tb.process_id
         INNER JOIN bill_data_json bdj ON bdj.bill_id = tb.id and bdj.is_deleted = 0
         LEFT JOIN (SELECT ba.id, ba.bill_id, ba.node_name, ba.task_id, ba.user_code,ba.action
-        FROM (SELECT bill_id, max(sort) AS ct FROM bill_task GROUP BY bill_id) AS bt
+        FROM (SELECT bill_id, max(sort) AS ct FROM bill_task where  is_deleted=0 GROUP BY bill_id) AS bt
         INNER JOIN bill_task ba ON bt.ct = ba.sort AND bt.bill_id = ba.bill_id GROUP BY ba.bill_id)
         approver
         ON approver.bill_id = tb.id
@@ -224,7 +224,7 @@
         INNER JOIN bill_data_json bdj ON bdj.bill_id = tb.id and bdj.is_deleted = 0
         INNER JOIN (SELECT ba.node_name, ba.task_id, ba.user_code, ba.bill_id,ba.action FROM
         bill_task ba
-        WHERE node_status = 1 AND ba.user_code = #{approver}
+        WHERE node_status = 1 AND ba.user_code = #{approver}  AND ba.is_deleted=0
         ORDER BY sort DESC ) approver ON approver.bill_id = tb.id
         LEFT JOIN bill_read_record brr ON brr.user_code = #{approver} AND brr.bill_id = tb.id and
         brr.is_deleted = 0
