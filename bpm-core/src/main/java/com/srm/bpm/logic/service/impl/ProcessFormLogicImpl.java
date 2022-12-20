@@ -337,9 +337,6 @@ public class ProcessFormLogicImpl implements ProcessFormLogic {
         } else {
             if (StringUtils.isEmpty(form.getTableName())) {
                 int size = formTableService.findByTableSize(FORM_TABLE_NAME_PREFIX);
-                if (size <= 0) {
-                    size = 1;
-                }
                 form.setTableName(FORM_TABLE_NAME_PREFIX +  (size+1));
             }
             form.setDetailFieldFlag(detailFileldFlag ? 1 : 0);
