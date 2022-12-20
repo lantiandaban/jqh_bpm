@@ -13,9 +13,9 @@ spring:
     druid:
       #MySQL
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/jqh_srm_9000?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+      url: jdbc:mysql://119.3.5.90:3306/jqh_srm_9000?useUnicode=true&characterEncoding=utf-8&useSSL=true&allowMultiQueries=true
       username: root
-      password: root
+      password: Jingtong@2021
       initial-size: 10
       max-active: 20
       min-idle: 2

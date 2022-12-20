@@ -317,10 +317,6 @@ public class ProcessFormLogicImpl implements ProcessFormLogic {
         if (form == null) {
             // 不存在表单
             int size = formTableService.findByTableSize(FORM_TABLE_NAME_PREFIX);
-            if (size <= 0) {
-                size = 1;
-            }
-
             form = new ToaFormEntity();
             form.setTableName(FORM_TABLE_NAME_PREFIX +  (size+1));
             form.setProcessFlag(1);
