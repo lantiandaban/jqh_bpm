@@ -20,8 +20,8 @@ spring:
       max-file-size: 100MB
       max-request-size: 1000MB
   #环境 dev|test|prod
-#  profiles:
-#    active: test
+  profiles:
+    active: prod
   messages:
     encoding: UTF-8
     basename: i18n/messages_common
@@ -45,7 +45,7 @@ spring:
     druid:
       #MySQL
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://119.3.5.90:3306/jqh_srm_9000?useUnicode=true&characterEncoding=utf-8&useSSL=true&allowMultiQueries=true
+      url: jdbc:mysql://119.3.5.90:3306/jqh_srm_9001?useUnicode=true&characterEncoding=utf-8&useSSL=true&allowMultiQueries=true
       username: root
       password: Jingtong@2021
       initial-size: 10
@@ -79,21 +79,15 @@ spring:
       client:
         url: http://127.0.0.1:9095
 management:
-  endpoint:
-    jolokia:
-      enabled: false
-    logfile:
-      external-file: "/Users/jiez/workspace/t-oa-bpm/bpm/logs/public.log"
-  endpoints:
-    web:
-      exposure:
-        include: '*'
+  server:
+    port: -1
 logging:
   config: classpath:logback-spring.xml
   level:
     root: info
     com.srm: debug
     com.srm.bpm.infra.dao.ToaBillDao.selectTodoSizeByStatus: error
+    de.codecentric.boot.admin.client.registration: off
 feign:
   sentinel:
     enabled: true

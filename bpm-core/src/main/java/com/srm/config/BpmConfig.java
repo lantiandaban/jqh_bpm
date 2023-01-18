@@ -5,6 +5,8 @@ package com.srm.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,4 +33,5 @@ public class BpmConfig {
     private String callbackUrl;
     
     private String pushmsgUrl;
+    private List<String> excludeUrl;
 }
