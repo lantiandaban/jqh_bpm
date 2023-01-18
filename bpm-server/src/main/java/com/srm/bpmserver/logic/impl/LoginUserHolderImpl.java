@@ -18,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,9 @@ public class LoginUserHolderImpl implements LoginUserHolder {
         final String requestHeader = request.getHeader(UserAuthConstant.TOKEN_HEADER_NAME);
         String userId;
         //需要区分一下，如果用户消息头中是 ·bearer · 开头需要从redis取用户，如果不是说明直接是用户id
-        if (requestHeader.startsWith(UserAuthConstant.TOKEN_HEADER_PREFIX)) {
+        if (Objects.isNull(requestHeader)) {
+            userId = "";
+        } else if (requestHeader.startsWith(UserAuthConstant.TOKEN_HEADER_PREFIX)) {
             final String header = requestHeader.replace(UserAuthConstant.TOKEN_HEADER_PREFIX, "");
             userId = (String) redisTemplate.opsForValue().get(header);
         } else {
